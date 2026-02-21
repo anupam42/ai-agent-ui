@@ -1,0 +1,11 @@
+flowchart LR
+    USERREQ[User Request]
+    EMB[Embedding Generator]
+    SEARCH[Vector Search]
+    FILTER[Design Rules Filter]
+    RESULT[Relevant Components]
+
+    USERREQ --> EMB
+    EMB --> SEARCH
+    SEARCH --> FILTER
+    FILTER --> RESULT

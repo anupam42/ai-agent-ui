@@ -1,0 +1,16 @@
+sequenceDiagram
+    participant U as User
+    participant F as Angular Frontend
+    participant B as .NET Backend
+    participant V as Vector DB
+    participant AI as OpenAI
+
+    U->>F: UI Request
+    F->>B: POST /generate-ui
+    B->>V: Search relevant components
+    V-->>B: Component metadata
+    B->>AI: Structured prompt
+    AI-->>B: Angular code JSON
+    B->>B: Validate & sanitize
+    B-->>F: Safe structured response
+    F->>F: Render dynamically

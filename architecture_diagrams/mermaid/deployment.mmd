@@ -1,0 +1,13 @@
+flowchart LR
+    CLIENT[Browser]
+    FRONTEND[Angular App]
+    API[.NET API]
+    VDB2[(Vector DB)]
+    DB[(Metadata DB)]
+    OPENAI[OpenAI API]
+
+    CLIENT --> FRONTEND
+    FRONTEND --> API
+    API --> VDB2
+    API --> DB
+    API --> OPENAI

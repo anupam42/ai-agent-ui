@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="End-to-End Sequence">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" connect="1">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Participants -->
+        <mxCell id="2" value="User" style="rounded=1;fillColor=#dae8fc;" vertex="1" parent="1">
+          <mxGeometry x="50" y="40" width="120" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="3" value="Angular Frontend" style="rounded=1;fillColor=#d5e8d4;" vertex="1" parent="1">
+          <mxGeometry x="250" y="40" width="160" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="4" value=".NET Backend" style="rounded=1;fillColor=#fff2cc;" vertex="1" parent="1">
+          <mxGeometry x="500" y="40" width="160" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="5" value="Vector DB" style="shape=cylinder;fillColor=#f8cecc;" vertex="1" parent="1">
+          <mxGeometry x="750" y="40" width="150" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="6" value="OpenAI API" style="rounded=1;fillColor=#e1d5e7;" vertex="1" parent="1">
+          <mxGeometry x="980" y="40" width="150" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Flow arrows -->
+        <mxCell id="10" edge="1" parent="1" source="2" target="3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="11" edge="1" parent="1" source="3" target="4"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="12" edge="1" parent="1" source="4" target="5"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="13" edge="1" parent="1" source="4" target="6"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="14" edge="1" parent="1" source="6" target="4"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="15" edge="1" parent="1" source="4" target="3"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

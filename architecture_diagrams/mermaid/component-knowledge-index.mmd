@@ -1,0 +1,11 @@
+flowchart LR
+    SCAN[Angular Code Scanner]
+    PARSER[Metadata Extractor]
+    JSON[Component JSON Builder]
+    STORE1[(Vector DB)]
+    STORE2[(JSON / SQL DB)]
+
+    SCAN --> PARSER
+    PARSER --> JSON
+    JSON --> STORE1
+    JSON --> STORE2

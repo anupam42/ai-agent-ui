@@ -1,0 +1,8 @@
+flowchart LR
+    REQUEST[User Request]
+    CACHE[Redis Cache]
+    ORCH[Orchestrator]
+
+    REQUEST --> CACHE
+    CACHE -->|Hit| RESPONSE
+    CACHE -->|Miss| ORCH

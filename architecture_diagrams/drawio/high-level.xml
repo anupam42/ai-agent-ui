@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net">
+  <diagram name="AI UI Generation - High Level">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- User -->
+        <mxCell id="2" value="User" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;" vertex="1" parent="1">
+          <mxGeometry x="50" y="200" width="120" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Angular Frontend -->
+        <mxCell id="3" value="Angular Frontend&#10;- Chat UI&#10;- Dynamic Renderer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;" vertex="1" parent="1">
+          <mxGeometry x="250" y="180" width="200" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- Backend -->
+        <mxCell id="4" value=".NET Core AI Orchestrator&#10;- Prompt Builder&#10;- Validator&#10;- Component Retrieval" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;" vertex="1" parent="1">
+          <mxGeometry x="520" y="160" width="240" height="140" as="geometry"/>
+        </mxCell>
+
+        <!-- Vector DB -->
+        <mxCell id="5" value="Vector Database&#10;(Component Knowledge Index)" style="shape=cylinder;whiteSpace=wrap;html=1;fillColor=#f8cecc;" vertex="1" parent="1">
+          <mxGeometry x="830" y="120" width="180" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Design Rules -->
+        <mxCell id="6" value="Design Rules Store&#10;(JSON / DB)" style="shape=cylinder;whiteSpace=wrap;html=1;fillColor=#f8cecc;" vertex="1" parent="1">
+          <mxGeometry x="830" y="240" width="180" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- OpenAI -->
+        <mxCell id="7" value="OpenAI Model API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;" vertex="1" parent="1">
+          <mxGeometry x="830" y="360" width="180" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- Edges -->
+        <mxCell id="10" edge="1" parent="1" source="2" target="3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="11" edge="1" parent="1" source="3" target="4"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="12" edge="1" parent="1" source="4" target="5"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="13" edge="1" parent="1" source="4" target="6"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="14" edge="1" parent="1" source="4" target="7"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="15" edge="1" parent="1" source="7" target="4"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="16" edge="1" parent="1" source="4" target="3"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

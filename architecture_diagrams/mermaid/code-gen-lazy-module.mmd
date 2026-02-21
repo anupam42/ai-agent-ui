@@ -1,0 +1,11 @@
+flowchart TD
+    CODE2[Generated Angular Files]
+    FILESYS[Write to Module Folder]
+    BUILD[Build/Compile]
+    LAZY[Lazy Load Module]
+    ROUTER[Angular Router]
+
+    CODE2 --> FILESYS
+    FILESYS --> BUILD
+    BUILD --> LAZY
+    LAZY --> ROUTER

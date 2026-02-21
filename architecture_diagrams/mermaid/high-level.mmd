@@ -1,0 +1,26 @@
+flowchart TD
+
+    U[User]
+    C[Angular Chat UI]
+    R[Dynamic UI Renderer]
+    B[.NET Core AI Orchestrator]
+    CI[Component Knowledge Index]
+    DS[Design Rules Store]
+    VDB[(Vector Database)]
+    FS[(Component Metadata JSON / DB)]
+    AI[OpenAI Model]
+    VAL[Response Validator & Sanitizer]
+    CG[Code Generator / Module Builder]
+
+    U --> C
+    C --> B
+    B --> CI
+    CI --> VDB
+    CI --> FS
+    B --> DS
+    B --> AI
+    AI --> B
+    B --> VAL
+    VAL --> CG
+    CG --> R
+    R --> C
