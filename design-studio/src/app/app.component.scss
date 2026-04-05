@@ -1,0 +1,119 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #1e1e2e, #2d2a44, #3a3a52);
+  font-family: "Inter", sans-serif;
+  color: #fff;
+  height: 100%;
+}
+
+.container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  height: 85vh;
+  transition: all 0.3s ease;
+}
+
+.panel {
+  flex: 1;
+  padding: 20px;
+  border-radius: 18px;
+  backdrop-filter: blur(16px) saturate(180%);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  animation: fadeIn 0.5s forwards ease;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+button {
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  color: #fff;
+  transition: 0.25s ease;
+}
+
+button:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+.chat-window {
+  flex: 1;
+  padding: 15px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow-y: auto;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.chat-input {
+  display: flex;
+  gap: 10px;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.12);
+  color: #000;
+}
+
+.chat-input input::placeholder {
+  color: #36454f;
+  opacity: 0.9;
+}
+
+.dummy-box {
+  flex: 1;
+  border-radius: 12px;
+  border: 1px dashed rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.07);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.restore-buttons {
+  display: flex;
+  gap: 12px;
+  padding: 20px;
+  justify-content: center;
+}
+
+.restore-buttons button {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.message {
+  margin-bottom: 10px;
+}
