@@ -37,16 +37,27 @@
     <div class="panel">
       <div class="panel-header">
         <h2>Generated Code</h2>
-        <button (click)="toggle('code')">Hide</button>
+
+        <div style="display: flex; gap: 10px">
+          <button (click)="copyCode()">Copy</button>
+          <button (click)="toggle('code')">Hide</button>
+        </div>
       </div>
-      <pre>
-&lt;!DOCTYPE html&gt; &lt;html&gt; &lt;head&gt;
-&lt;title&gt;Placeholder&lt;/title&gt; &lt;/head&gt; &lt;body&gt;
-&lt;h2&gt;Simple Form&lt;/h2&gt; &lt;input type="text"
-placeholder="Name"&gt;&lt;br&gt;&lt;br&gt; &lt;input type="email"
-placeholder="Email"&gt;&lt;br&gt;&lt;br&gt;
-&lt;button&gt;Submit&lt;/button&gt; &lt;/body&gt; &lt;/html&gt;
-</pre
+
+      <pre #codeBlock>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Mavim&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h2&gt;Login&lt;/h2&gt;
+  &lt;input type="email" placeholder="Email"&gt;&lt;br&gt;&lt;br&gt;
+  &lt;input type="password" placeholder="Password"&gt;&lt;br&gt;&lt;br&gt;
+  &lt;button&gt;Submit&lt;/button&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+    </pre
       >
     </div>
   }
