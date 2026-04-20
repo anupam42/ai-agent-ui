@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(npx ng *)",
-      "Bash(node -e \"console.log\\(require\\('./node_modules/@angular/material/package.json'\\).version, require\\('./node_modules/@angular/core/package.json'\\).version\\)\")"
+      "Bash(node -e \"console.log\\(require\\('./node_modules/@angular/material/package.json'\\).version, require\\('./node_modules/@angular/core/package.json'\\).version\\)\")",
+      "Bash(git -C /Users/anupamudupi/Documents/AnupDevelopment/ai-agent-ui ls-files --error-unmatch .claude)",
+      "Bash(git -C /Users/anupamudupi/Documents/AnupDevelopment/ai-agent-ui rm --cached -r .claude/)"
     ]
   }
 }
