@@ -1,0 +1,85 @@
+<div class="code-panel">
+  <div class="panel-header">
+    <span class="panel-title">
+      <mat-icon>code</mat-icon>
+      Generated Code
+    </span>
+    @if (code) {
+      <button mat-stroked-button class="download-all-btn" (click)="downloadAll()" matTooltip="Download all files">
+        <mat-icon>download</mat-icon>
+        Download All
+      </button>
+    }
+  </div>
+
+  @if (!code) {
+    <div class="code-placeholder">
+      <mat-icon class="empty-icon">integration_instructions</mat-icon>
+      <p>Click <strong>Generate Code</strong> in the canvas panel to produce Angular component code.</p>
+    </div>
+  } @else {
+    <mat-tab-group class="code-tabs" animationDuration="150ms">
+
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">html</mat-icon>
+          component.html
+        </ng-template>
+        <div class="code-block-wrapper">
+          <div class="code-actions">
+            <button mat-icon-button
+              [matTooltip]="copiedTab === 'html' ? 'Copied!' : 'Copy'"
+              (click)="copy(code.html, 'html')">
+              <mat-icon>{{ copiedTab === 'html' ? 'check' : 'content_copy' }}</mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="Download" (click)="download(code.html, 'component.html')">
+              <mat-icon>download</mat-icon>
+            </button>
+          </div>
+          <pre class="code-block lang-html"><code>{{ code.html }}</code></pre>
+        </div>
+      </mat-tab>
+
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">javascript</mat-icon>
+          component.ts
+        </ng-template>
+        <div class="code-block-wrapper">
+          <div class="code-actions">
+            <button mat-icon-button
+              [matTooltip]="copiedTab === 'ts' ? 'Copied!' : 'Copy'"
+              (click)="copy(code.ts, 'ts')">
+              <mat-icon>{{ copiedTab === 'ts' ? 'check' : 'content_copy' }}</mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="Download" (click)="download(code.ts, 'component.ts')">
+              <mat-icon>download</mat-icon>
+            </button>
+          </div>
+          <pre class="code-block lang-ts"><code>{{ code.ts }}</code></pre>
+        </div>
+      </mat-tab>
+
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon class="tab-icon">style</mat-icon>
+          component.scss
+        </ng-template>
+        <div class="code-block-wrapper">
+          <div class="code-actions">
+            <button mat-icon-button
+              [matTooltip]="copiedTab === 'scss' ? 'Copied!' : 'Copy'"
+              (click)="copy(code.scss, 'scss')">
+              <mat-icon>{{ copiedTab === 'scss' ? 'check' : 'content_copy' }}</mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="Download" (click)="download(code.scss, 'component.scss')">
+              <mat-icon>download</mat-icon>
+            </button>
+          </div>
+          <pre class="code-block lang-scss"><code>{{ code.scss }}</code></pre>
+        </div>
+      </mat-tab>
+
+    </mat-tab-group>
+  }
+</div>

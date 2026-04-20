@@ -1,127 +1,122 @@
-body,
-html {
-  margin: 0;
-  padding: 0;
-  background: linear-gradient(135deg, #1e1e2e, #2d2a44, #3a3a52);
-  font-family: "Inter", sans-serif;
+$bg-dark: #1a1a2e;
+$bg-mid: #16213e;
+$panel-border: rgba(255, 255, 255, 0.1);
+$glass-bg: rgba(255, 255, 255, 0.06);
+
+:host {
+  display: block;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.nlw-app {
+  display: grid;
+  grid-template-rows: 56px 1fr;
+  height: 100vh;
+  background: linear-gradient(135deg, $bg-dark 0%, #2d2a44 50%, #1a2744 100%);
   color: #fff;
-  height: 100%;
+  overflow: hidden;
 }
 
-.container {
+// Toolbar
+.nlw-toolbar {
   display: flex;
-  gap: 20px;
-  padding: 20px;
-  height: 85vh;
-  transition: all 0.3s ease;
-}
-
-.panel {
-  flex: 1;
-  padding: 20px;
-  border-radius: 18px;
-  backdrop-filter: blur(16px) saturate(180%);
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
-  opacity: 0;
-  animation: fadeIn 0.5s forwards ease;
-  display: flex;
-  flex-direction: column;
-}
-
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
-}
-
-.panel-header {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid $panel-border;
+  backdrop-filter: blur(12px);
+  z-index: 10;
 }
 
-button {
-  padding: 8px 14px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
-  color: #fff;
-  transition: 0.25s ease;
-}
-
-button:hover {
-  transform: scale(1.08);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-button:active {
-  transform: scale(0.95);
-}
-
-.chat-window {
-  flex: 1;
-  padding: 15px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.08);
-  overflow-y: auto;
-  margin-bottom: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.chat-input {
+.toolbar-brand {
   display: flex;
+  align-items: center;
   gap: 10px;
 }
 
-.chat-input input {
-  flex: 1;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  background: rgba(255, 255, 255, 0.12);
-  color: #000;
+.brand-icon {
+  color: #7c8cff;
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
 }
 
-.chat-input input::placeholder {
-  color: #36454f;
-  opacity: 0.9;
+.brand-name {
+  font-size: 18px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #a8b4ff, #c084fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
 }
 
-.dummy-box {
-  flex: 1;
-  border-radius: 12px;
-  border: 1px dashed rgba(255, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.07);
+.brand-tagline {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+  font-weight: 400;
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  padding-left: 10px;
+  margin-left: 2px;
+}
+
+.toolbar-actions {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 18px;
+  gap: 10px;
 }
 
-.restore-buttons {
+.version-badge {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.3);
+  font-family: monospace;
+}
+
+.stack-badge {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(168, 180, 255, 0.7);
+  background: rgba(124, 140, 255, 0.12);
+  border: 1px solid rgba(124, 140, 255, 0.25);
+  padding: 3px 10px;
+  border-radius: 10px;
+  letter-spacing: 0.3px;
+}
+
+// 3-panel grid
+.nlw-panels {
+  display: grid;
+  grid-template-columns: 320px 1fr 380px;
+  height: calc(100vh - 56px);
+  overflow: hidden;
+}
+
+.panel {
   display: flex;
-  gap: 12px;
-  padding: 20px;
-  justify-content: center;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: $glass-bg;
+  backdrop-filter: blur(16px);
+  border-right: 1px solid $panel-border;
+
+  &:last-child { border-right: none; }
 }
 
-.restore-buttons button {
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
+.panel-prompt { border-right: 1px solid $panel-border; }
+.panel-canvas { background: rgba(255, 255, 255, 0.04); }
+.panel-code {
+  border-left: 1px solid $panel-border;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 
-.message {
-  margin-bottom: 10px;
-}
-
-.panel-header button:first-child {
-  background: linear-gradient(135deg, #22c1c3, #1a8cff);
-}
-
-.panel-header button:first-child:hover {
-  box-shadow: 0 4px 14px rgba(26, 140, 255, 0.4);
+  app-code-preview {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
 }

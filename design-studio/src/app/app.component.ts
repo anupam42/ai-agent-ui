@@ -1,51 +1,25 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { PromptPanelComponent } from './components/prompt-panel/prompt-panel.component';
+import { WireframeCanvasComponent } from './components/wireframe-canvas/wireframe-canvas.component';
+import { CodePreviewComponent } from './components/code-preview/code-preview.component';
+import { MappingPanelComponent } from './components/mapping-panel/mapping-panel.component';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
+  imports: [
+    MatIconModule, MatButtonModule, MatTooltipModule,
+    PromptPanelComponent,
+    WireframeCanvasComponent,
+    CodePreviewComponent,
+    MappingPanelComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  imports: [FormsModule],
 })
 export class AppComponent {
-  @ViewChild('codeBlock') codeBlock!: ElementRef;
-
-  public message = '';
-  public chatHistory: string[] = [];
-
-  public visible = {
-    chat: true,
-    design: false,
-    code: false,
-  };
-
-  public sendMessage(): void {
-    if (!this.message.trim()) return;
-
-    this.chatHistory.push(this.message);
-
-    const dummyResponse = `Here's your design..`;
-    this.chatHistory.push(dummyResponse);
-
-    this.visible.design = true;
-    this.visible.code = true;
-
-    this.message = '';
-  }
-
-  public toggle(panel: 'chat' | 'design' | 'code'): void {
-    this.visible[panel] = !this.visible[panel];
-  }
-
-  public async copyCode() {
-    const code = this.codeBlock.nativeElement.innerText;
-
-    try {
-      await navigator.clipboard.writeText(code);
-      console.log('✅ Code copied!');
-      alert('Copied to clipboard ✔️');
-    } catch (err) {
-      console.error('❌ Copy failed:', err);
-    }
-  }
+  readonly version = '0.1.0';
 }

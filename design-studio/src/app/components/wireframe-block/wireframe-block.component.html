@@ -1,0 +1,245 @@
+<div class="wf-block"
+  [ngClass]="'wf-' + node.type"
+  [ngStyle]="{ width: node.width, height: node.height }">
+
+  @switch (node.type) {
+
+    @case ('header') {
+      <div class="wf-header-inner">
+        @for (child of node.children; track $index) {
+          <app-wireframe-block [node]="child" [depth]="depth + 1" />
+        }
+      </div>
+    }
+
+    @case ('sidebar') {
+      <div class="wf-type-badge"><span class="wf-icon">☰</span> Sidebar</div>
+      @if (node.items?.length) {
+        <ul class="wf-sidebar-list">
+          @for (item of node.items; track item) {
+            <li class="wf-sidebar-item">
+              <span class="wf-dot"></span>{{ item }}
+            </li>
+          }
+        </ul>
+      }
+    }
+
+    @case ('stat-card') {
+      <div class="wf-stat-inner">
+        <div class="wf-stat-label">{{ node.label || 'Stat' }}</div>
+        <div class="wf-stat-value">{{ node.value || '—' }}</div>
+        <div class="wf-stat-bar"></div>
+      </div>
+    }
+
+    @case ('data-table') {
+      <div class="wf-type-badge"><span class="wf-icon">⊞</span> {{ node.label || 'Data Table' }}</div>
+      <table class="wf-table">
+        <thead>
+          <tr>
+            @for (col of (node.columns || ['Column 1','Column 2','Column 3','Column 4']); track col) {
+              <th>{{ col }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of getRows(node.rows); track $index) {
+            <tr>
+              @for (col of (node.columns || ['Column 1','Column 2','Column 3','Column 4']); track col) {
+                <td><span class="wf-cell-ph"></span></td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+
+    @case ('form') {
+      <div class="wf-form-inner">
+        @for (child of node.children; track $index) {
+          <app-wireframe-block [node]="child" [depth]="depth + 1" />
+        }
+      </div>
+    }
+
+    @case ('hero') {
+      <div class="wf-hero-inner">
+        <div class="wf-type-badge"><span class="wf-icon">◈</span> {{ node.label || 'Hero' }}</div>
+        @for (child of node.children; track $index) {
+          <app-wireframe-block [node]="child" [depth]="depth + 1" />
+        }
+      </div>
+    }
+
+    @case ('card') {
+      <div class="wf-card-inner">
+        @if (node.title) {
+          <div class="wf-card-title">{{ node.title }}</div>
+        }
+        @if (node.label) {
+          <div class="wf-type-badge">{{ node.label }}</div>
+        }
+        <div class="wf-card-body">
+          @if (node.children?.length) {
+            @for (child of node.children; track $index) {
+              <app-wireframe-block [node]="child" [depth]="depth + 1" />
+            }
+          } @else {
+            <div class="wf-ph-line"></div>
+            <div class="wf-ph-line short"></div>
+            <div class="wf-ph-line medium"></div>
+          }
+        </div>
+      </div>
+    }
+
+    @case ('row') {
+      @for (child of node.children; track $index) {
+        <app-wireframe-block [node]="child" [depth]="depth + 1" />
+      }
+    }
+
+    @case ('column') {
+      @for (child of node.children; track $index) {
+        <app-wireframe-block [node]="child" [depth]="depth + 1" />
+      }
+    }
+
+    @case ('main') {
+      @for (child of node.children; track $index) {
+        <app-wireframe-block [node]="child" [depth]="depth + 1" />
+      }
+    }
+
+    @case ('grid') {
+      @for (child of node.children; track $index) {
+        <app-wireframe-block [node]="child" [depth]="depth + 1" />
+      }
+    }
+
+    @case ('nav') {
+      @for (item of (node.items || []); track item) {
+        <span class="wf-nav-item">{{ item }}</span>
+      }
+    }
+
+    @case ('logo') {
+      <div class="wf-logo-box">
+        <span class="wf-logo-text">LOGO</span>
+      </div>
+    }
+
+    @case ('button') {
+      <span class="wf-btn-text">{{ node.label || 'Button' }}</span>
+    }
+
+    @case ('icon-button') {
+      <span class="wf-icon-symbol">🔔</span>
+    }
+
+    @case ('input') {
+      <div class="wf-input-label">{{ node.label }}</div>
+      <div class="wf-input-field">
+        <span class="wf-input-ph">{{ node.placeholder || 'Enter value...' }}</span>
+      </div>
+    }
+
+    @case ('search') {
+      <div class="wf-search-box">
+        <span class="wf-search-icon">🔍</span>
+        <span class="wf-input-ph">{{ node.placeholder || 'Search...' }}</span>
+      </div>
+    }
+
+    @case ('text') {
+      <div class="wf-text-inner">
+        @if (node.label) {
+          <div class="wf-text-heading">{{ node.label }}</div>
+        }
+        <div class="wf-text-body">{{ node.placeholder || 'Text content here' }}</div>
+      </div>
+    }
+
+    @case ('image') {
+      <div class="wf-image-ph">
+        <span>⬜ Image</span>
+      </div>
+    }
+
+    @case ('divider') {
+      <hr class="wf-hr" />
+    }
+
+    @case ('footer') {
+      <div class="wf-footer-inner">
+        <div class="wf-type-badge"><span class="wf-icon">▬</span> {{ node.label || 'Footer' }}</div>
+        @if (node.items?.length) {
+          <div class="wf-footer-links">
+            @for (item of node.items; track item) {
+              <span class="wf-footer-link">{{ item }}</span>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    @case ('tabs') {
+      <div class="wf-tabs-inner">
+        <div class="wf-tabs-bar">
+          @for (child of node.children; track $index) {
+            <div class="wf-tab" [class.wf-tab-active]="$index === 0">
+              {{ child.label || 'Tab ' + ($index + 1) }}
+            </div>
+          }
+        </div>
+        @if (firstTabChildren(node).length) {
+          <div class="wf-tab-content">
+            @for (child of firstTabChildren(node); track $index) {
+              <app-wireframe-block [node]="child" [depth]="depth + 1" />
+            }
+          </div>
+        }
+      </div>
+    }
+
+    @case ('stepper') {
+      <div class="wf-stepper-inner">
+        <div class="wf-stepper-bar">
+          @for (child of node.children; track $index) {
+            <div class="wf-step" [class.wf-step-active]="$index === 0">
+              <div class="wf-step-dot">{{ $index + 1 }}</div>
+              <span>{{ child.label || 'Step ' + ($index + 1) }}</span>
+            </div>
+            @if (!$last) { <div class="wf-step-line"></div> }
+          }
+        </div>
+        @if (firstTabChildren(node).length) {
+          @for (child of firstTabChildren(node); track $index) {
+            <app-wireframe-block [node]="child" [depth]="depth + 1" />
+          }
+        }
+      </div>
+    }
+
+    @default {
+      <div class="wf-default-inner">
+        <div class="wf-type-badge">{{ node.type }}</div>
+        @if (node.label) {
+          <span class="wf-label-text">{{ node.label }}</span>
+        }
+        @if (node.children?.length) {
+          @for (child of node.children; track $index) {
+            <app-wireframe-block [node]="child" [depth]="depth + 1" />
+          }
+        }
+      </div>
+    }
+  }
+
+  @if (node.mappedComponent) {
+    <div class="wf-mapped-badge" [title]="'Maps to: ' + node.mappedComponent">
+      {{ node.mappedComponent }}
+    </div>
+  }
+</div>

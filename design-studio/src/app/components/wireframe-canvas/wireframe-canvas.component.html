@@ -1,0 +1,67 @@
+<div class="canvas-panel">
+  <div class="canvas-header">
+    <div class="canvas-title-row">
+      <span class="panel-title">
+        <mat-icon>dashboard</mat-icon>
+        Wireframe Canvas
+      </span>
+      @if (schema) {
+        <span class="schema-name">{{ schema.name }}</span>
+      }
+    </div>
+    <div class="canvas-controls">
+      <mat-button-toggle-group [(ngModel)]="viewport" class="viewport-toggle">
+        <mat-button-toggle value="desktop" matTooltip="Desktop">
+          <mat-icon>desktop_windows</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle value="tablet" matTooltip="Tablet">
+          <mat-icon>tablet</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle value="mobile" matTooltip="Mobile">
+          <mat-icon>smartphone</mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+
+      @if (history.length > 1) {
+        <select class="history-select" (change)="loadVersion(history[$any($event.target).value])">
+          @for (h of history; track h.id; let i = $index) {
+            <option [value]="i">{{ h.name }} — {{ h.createdAt | date: 'shortTime' }}</option>
+          }
+        </select>
+      }
+    </div>
+  </div>
+
+  <div class="canvas-body">
+    @if (loading) {
+      <div class="canvas-placeholder loading">
+        <div class="loading-spinner"></div>
+        <p>Generating wireframe...</p>
+      </div>
+    } @else if (!schema) {
+      <div class="canvas-placeholder empty">
+        <mat-icon class="empty-icon">draw</mat-icon>
+        <p>Your wireframe will appear here.</p>
+        <p class="hint">Type a description in the prompt panel to get started.</p>
+      </div>
+    } @else {
+      <div class="canvas-viewport" [style.max-width]="canvasWidth">
+        <app-wireframe-block [node]="schema.root" [depth]="0" />
+      </div>
+    }
+  </div>
+
+  <div class="canvas-footer">
+    <button
+      mat-raised-button
+      color="accent"
+      class="gen-code-btn"
+      [disabled]="!schema || loading"
+      (click)="generateCode()"
+      matTooltip="Generate Angular component code from this wireframe"
+    >
+      <mat-icon>code</mat-icon>
+      Generate Code
+    </button>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+<div class="mapping-panel">
+  <div class="mapping-header">
+    <mat-icon>account_tree</mat-icon>
+    Component Mapping
+    @if (mappings.length) {
+      <span class="count-badge">{{ mappings.length }}</span>
+    }
+  </div>
+
+  @if (!mappings.length) {
+    <div class="mapping-empty">
+      <p>Generate a wireframe to see component mappings.</p>
+    </div>
+  } @else {
+    <div class="mapping-legend">
+      <span class="legend-item"><mat-icon class="icon-exact">check_circle</mat-icon> Exact</span>
+      <span class="legend-item"><mat-icon class="icon-partial">adjust</mat-icon> Partial</span>
+      <span class="legend-item"><mat-icon class="icon-fallback">radio_button_unchecked</mat-icon> Fallback</span>
+    </div>
+    <div class="mapping-list">
+      @for (m of mappings; track m.blockLabel) {
+        <div class="mapping-row">
+          <mat-icon
+            class="confidence-icon"
+            [ngClass]="'icon-' + m.matchConfidence"
+            [matTooltip]="confidenceLabel(m.matchConfidence)">
+            {{ confidenceIcon(m.matchConfidence) }}
+          </mat-icon>
+          <div class="mapping-info">
+            <div class="mapping-block">{{ m.blockLabel }}</div>
+            <div class="mapping-component">→ {{ m.componentName }}</div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

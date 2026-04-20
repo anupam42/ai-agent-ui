@@ -1,76 +1,32 @@
-<div class="container">
-  @if (visible.chat) {
-    <div class="panel">
-      <div class="panel-header">
-        <h2>Chat</h2>
-        <button (click)="toggle('chat')">Hide</button>
-      </div>
-      <div class="chat-window">
-        @for (msg of chatHistory; track msg) {
-          <div class="message">{{ msg }}</div>
-        }
-      </div>
-      <div class="chat-input">
-        <input
-          [(ngModel)]="message"
-          (keyup.enter)="sendMessage()"
-          placeholder="Type your message..."
-        />
-        <button (click)="sendMessage()">Send</button>
-      </div>
+<div class="nlw-app">
+
+  <header class="nlw-toolbar">
+    <div class="toolbar-brand">
+      <mat-icon class="brand-icon">auto_awesome</mat-icon>
+      <span class="brand-name">NLW</span>
+      <span class="brand-tagline">Natural Language → Wireframe → Code</span>
     </div>
-  }
-
-  @if (visible.design) {
-    <div class="panel">
-      <div class="panel-header">
-        <h2>Design Renderer</h2>
-        <button (click)="toggle('design')">Hide</button>
-      </div>
-      <div class="dummy-box">
-        <p>Design Output</p>
-      </div>
+    <div class="toolbar-actions">
+      <span class="version-badge">v{{ version }}</span>
+      <span class="stack-badge">Angular · Bootstrap · Material</span>
     </div>
-  }
+  </header>
 
-  @if (visible.code) {
-    <div class="panel">
-      <div class="panel-header">
-        <h2>Generated Code</h2>
+  <div class="nlw-panels">
 
-        <div style="display: flex; gap: 10px">
-          <button (click)="copyCode()">Copy</button>
-          <button (click)="toggle('code')">Hide</button>
-        </div>
-      </div>
-
-      <pre #codeBlock>
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-  &lt;title&gt;Mavim&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-  &lt;h2&gt;Login&lt;/h2&gt;
-  &lt;input type="email" placeholder="Email"&gt;&lt;br&gt;&lt;br&gt;
-  &lt;input type="password" placeholder="Password"&gt;&lt;br&gt;&lt;br&gt;
-  &lt;button&gt;Submit&lt;/button&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-    </pre
-      >
+    <div class="panel panel-prompt">
+      <app-prompt-panel />
     </div>
-  }
-</div>
 
-<div class="restore-buttons">
-  @if (!visible.chat) {
-    <button (click)="toggle('chat')">Show Chat</button>
-  }
-  @if (!visible.design) {
-    <button (click)="toggle('design')">Show Design</button>
-  }
-  @if (!visible.code) {
-    <button (click)="toggle('code')">Show Code</button>
-  }
+    <div class="panel panel-canvas">
+      <app-wireframe-canvas />
+    </div>
+
+    <div class="panel panel-code">
+      <app-code-preview />
+      <app-mapping-panel />
+    </div>
+
+  </div>
+
 </div>

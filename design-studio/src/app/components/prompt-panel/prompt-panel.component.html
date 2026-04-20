@@ -1,0 +1,59 @@
+<div class="prompt-panel">
+  <div class="panel-header">
+    <span class="panel-title">
+      <mat-icon>chat</mat-icon>
+      Prompt
+    </span>
+    <span class="panel-subtitle">Describe your UI in plain English</span>
+  </div>
+
+  <div class="chat-window" #chatContainer>
+    @for (msg of messages; track msg.id) {
+      <div class="chat-message" [ngClass]="msg.role === 'user' ? 'msg-user' : 'msg-ai'">
+        @if (msg.role === 'assistant') {
+          <div class="ai-avatar">
+            <mat-icon>auto_awesome</mat-icon>
+          </div>
+        }
+        <div class="msg-bubble">
+          @if (msg.isLoading) {
+            <div class="loading-dots">
+              <span></span><span></span><span></span>
+            </div>
+          } @else {
+            <p>{{ msg.content }}</p>
+            <div class="msg-time">{{ msg.timestamp | date: 'shortTime' }}</div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (messages.length === 1) {
+    <div class="example-prompts">
+      <div class="examples-label">Try an example:</div>
+      @for (ex of examples; track ex) {
+        <button class="example-chip" (click)="send(ex)">{{ ex }}</button>
+      }
+    </div>
+  }
+
+  <div class="chat-input-row">
+    <textarea
+      [(ngModel)]="input"
+      (keydown)="onKeydown($event)"
+      placeholder="Describe a UI screen... (Enter to send)"
+      rows="2"
+      [disabled]="loading"
+    ></textarea>
+    <button
+      mat-icon-button
+      class="send-btn"
+      [disabled]="!input.trim() || loading"
+      (click)="send()"
+      matTooltip="Send (Enter)"
+    >
+      <mat-icon>send</mat-icon>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,105 @@
+$glass-border: rgba(255, 255, 255, 0.12);
+
+.mapping-panel {
+  padding: 12px 16px;
+  border-top: 1px solid $glass-border;
+}
+
+.mapping-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+
+  mat-icon { font-size: 16px; width: 16px; height: 16px; color: #7c8cff; }
+}
+
+.count-badge {
+  background: rgba(124, 140, 255, 0.25);
+  color: #a8b4ff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 10px;
+}
+
+.mapping-legend {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.45);
+
+    mat-icon { font-size: 12px; width: 12px; height: 12px; }
+  }
+}
+
+.mapping-empty {
+  p { font-size: 12px; color: rgba(255, 255, 255, 0.35); margin: 0; }
+}
+
+.mapping-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar { width: 3px; }
+  &::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+}
+
+.mapping-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+
+  .confidence-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+}
+
+.mapping-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.mapping-block {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mapping-component {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.icon-exact { color: #4ade80; }
+.icon-partial { color: #facc15; }
+.icon-fallback { color: rgba(255, 255, 255, 0.3); }
