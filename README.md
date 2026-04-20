@@ -244,11 +244,115 @@ source.onmessage = (e) => {
 
 ---
 
-## Files
+## System Architecture Diagram
 
-| File | Purpose |
-|---|---|
-| [NLW.md](NLW.md) | Full feature specification |
-| [feature.md](feature.md) | Original feature brainstorm |
-| [ai_frontend_plan.md](ai_frontend_plan.md) | Original AI frontend architecture plan |
-| [design-studio/](design-studio/) | Angular 19 application source |
+```mermaid
+graph TD
+    User(["👤 User"])
+    subgraph Browser["Angular App — design-studio"]
+        PP["PromptPanelComponent\nChat UI + Input"]
+        WC["WireframeCanvasComponent\nViewport · Render · Generate"]
+        WB["WireframeBlockComponent\nRecursive JSON → Visual Blocks"]
+        CP["CodePreviewComponent\nHTML · TS · SCSS Tabs"]
+        MP["MappingPanelComponent\nComponent Map + Confidence"]
+        WS[("WireframeService\nBehaviorSubject streams")]
+    end
+
+    subgraph Backend["Backend — .NET Core (Phase 2)"]
+        API["POST /api/wireframe/generate"]
+        PB["Prompt Builder\n(prompt + components + rules)"]
+        CI["Component Index\n(Angular metadata JSON)"]
+        DR["Design Rules JSON"]
+        AI["AI Model\nClaude / OpenAI"]
+    end
+
+    User -->|"types description"| PP
+    PP -->|"generateWireframe(prompt)"| WS
+    WS -->|"schema$"| WC
+    WS -->|"schema$"| MP
+    WC -->|"renders node tree"| WB
+    WC -->|"generateCode()"| WS
+    WS -->|"code$"| CP
+
+    WS -.->|"Phase 2: HTTP POST"| API
+    API --> PB
+    PB --> CI
+    PB --> DR
+    PB -->|"structured prompt"| AI
+    AI -->|"WireframeSchema JSON"| API
+    API -.->|"response"| WS
+
+    style Browser fill:#1e1e3a,color:#fff,stroke:#7c8cff
+    style Backend fill:#1a3a1a,color:#fff,stroke:#4ade80
+    style WS fill:#2d2a54,color:#fff,stroke:#a8b4ff
+```
+
+---
+
+## UI Flow Diagram
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant Chat as Prompt Panel
+    participant Svc as WireframeService
+    participant Canvas as Wireframe Canvas
+    participant Code as Code Preview
+
+    User->>Chat: Types "Build a dashboard with sidebar and stats"
+    Chat->>Svc: generateWireframe(prompt)
+    Note over Svc: Mock AI (Phase 1) or<br/>HTTP → .NET → Claude (Phase 2)
+    Svc-->>Canvas: schema$ emits WireframeSchema
+    Canvas->>Canvas: Recursively renders WireframeNode tree
+    Note over Canvas: header → sidebar + main<br/>main → stat-cards + data-table
+
+    User->>Canvas: Clicks "Generate Code →"
+    Canvas->>Svc: generateCode(schema)
+    Svc->>Svc: Walks node tree → builds HTML + TS + SCSS
+    Svc-->>Code: code$ emits GeneratedCode
+    Code->>User: Shows Angular component code in tabs
+
+    User->>Code: Clicks Copy or Download
+```
+
+---
+
+## Wireframe Node Tree — Dashboard Example
+
+```mermaid
+graph TD
+    Root["column"]
+    H["header\n↳ MatToolbar"]
+    Logo["logo\n↳ BrandLogoComponent"]
+    Nav["nav\n↳ MatButton links"]
+    Bell["icon-button\n↳ MatIconButton"]
+    Row["row"]
+    Side["sidebar\n↳ MatSidenav\nOverview · Analytics · Reports"]
+    Main["main"]
+    Cards["row — stat cards"]
+    C1["stat-card\nTotal Users\n↳ SummaryCardComponent"]
+    C2["stat-card\nRevenue\n↳ SummaryCardComponent"]
+    C3["stat-card\nSessions\n↳ SummaryCardComponent"]
+    C4["stat-card\nConversion\n↳ SummaryCardComponent"]
+    Table["data-table\nRecent Orders\n↳ MatTable"]
+
+    Root --> H
+    Root --> Row
+    H --> Logo
+    H --> Nav
+    H --> Bell
+    Row --> Side
+    Row --> Main
+    Main --> Cards
+    Main --> Table
+    Cards --> C1
+    Cards --> C2
+    Cards --> C3
+    Cards --> C4
+
+    style Root fill:#3f51b5,color:#fff
+    style H fill:#5c6bc0,color:#fff
+    style Row fill:#3f51b5,color:#fff
+    style Main fill:#5c6bc0,color:#fff
+    style Cards fill:#3f51b5,color:#fff
+```
