@@ -1,0 +1,41 @@
+{
+  "colorTokens": {
+    "primary": "#3f51b5",
+    "accent": "#ff4081",
+    "warn": "#f44336",
+    "success": "#4caf50",
+    "background": "#fafafa",
+    "surface": "#ffffff",
+    "onPrimary": "#ffffff",
+    "textPrimary": "#212121",
+    "textSecondary": "#757575"
+  },
+  "spacing": {
+    "xs": "4px",
+    "sm": "8px",
+    "md": "16px",
+    "lg": "24px",
+    "xl": "32px",
+    "xxl": "48px"
+  },
+  "typography": {
+    "fontFamily": "Inter, Segoe UI, sans-serif",
+    "h1": "2.5rem / 700",
+    "h2": "2rem / 700",
+    "h3": "1.5rem / 600",
+    "body": "1rem / 400",
+    "caption": "0.75rem / 400"
+  },
+  "layout": {
+    "gridColumns": 12,
+    "containerMaxWidth": "1440px",
+    "sidebarWidth": "240px",
+    "headerHeight": "64px",
+    "borderRadius": "8px",
+    "cardElevation": "0 2px 8px rgba(0,0,0,0.08)"
+  },
+  "allowedLibraries": ["@angular/material", "bootstrap"],
+  "forbiddenPatterns": ["tailwind", "react", "vue", "inline styles"],
+  "componentPreference": "company-components-first",
+  "fallback": "angular-material"
+}

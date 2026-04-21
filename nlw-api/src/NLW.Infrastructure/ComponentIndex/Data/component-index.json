@@ -1,0 +1,66 @@
+[
+  {
+    "selector": "app-summary-card",
+    "inputs": ["title", "value", "trend", "trendDirection"],
+    "outputs": [],
+    "description": "Stats summary card showing a metric value with trend indicator",
+    "category": "data-display",
+    "mappedBlockType": "stat-card"
+  },
+  {
+    "selector": "app-data-table",
+    "inputs": ["columns", "dataSource", "paginator", "sortable"],
+    "outputs": ["rowClick", "pageChange"],
+    "description": "Reusable data table with sorting, filtering and pagination",
+    "category": "data-display",
+    "mappedBlockType": "data-table"
+  },
+  {
+    "selector": "app-page-header",
+    "inputs": ["title", "subtitle", "breadcrumbs", "actions"],
+    "outputs": [],
+    "description": "Page header with title, subtitle and breadcrumb navigation",
+    "category": "layout",
+    "mappedBlockType": "header"
+  },
+  {
+    "selector": "app-side-nav",
+    "inputs": ["items", "collapsed", "activeRoute"],
+    "outputs": ["itemClick", "collapseChange"],
+    "description": "Collapsible sidebar navigation with icon support",
+    "category": "navigation",
+    "mappedBlockType": "sidebar"
+  },
+  {
+    "selector": "app-form-field",
+    "inputs": ["label", "placeholder", "type", "required", "errorMessage"],
+    "outputs": ["valueChange"],
+    "description": "Styled form field wrapper with validation and error display",
+    "category": "form",
+    "mappedBlockType": "input"
+  },
+  {
+    "selector": "app-action-button",
+    "inputs": ["label", "variant", "loading", "disabled", "icon"],
+    "outputs": ["clicked"],
+    "description": "Primary action button with loading state and icon support",
+    "category": "action",
+    "mappedBlockType": "button"
+  },
+  {
+    "selector": "app-content-card",
+    "inputs": ["title", "subtitle", "elevation", "padding"],
+    "outputs": [],
+    "description": "Generic content card with header and body slots",
+    "category": "layout",
+    "mappedBlockType": "card"
+  },
+  {
+    "selector": "app-brand-logo",
+    "inputs": ["size", "variant"],
+    "outputs": [],
+    "description": "Company brand logo component with size variants",
+    "category": "branding",
+    "mappedBlockType": "logo"
+  }
+]
