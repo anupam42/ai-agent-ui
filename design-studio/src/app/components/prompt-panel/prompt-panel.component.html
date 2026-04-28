@@ -1,16 +1,10 @@
-<!-- prompt-panel.component.html -->
 <div class="prompt-panel">
   <div class="panel-header">
     <span class="panel-title">
-      <!-- Icon: chat bubble → alternatives: forum, question_answer, smart_toy, assistant -->
-      <mat-icon>forum</mat-icon>
-      CONVERSATION
+      <mat-icon>chat</mat-icon>
+      Prompt
     </span>
-    <button class="new-chat-btn" matTooltip="Start new conversation">
-      <!-- Icon: add → alternatives: add_circle_outline, note_add, post_add -->
-      <mat-icon>add</mat-icon>
-      New
-    </button>
+    <span class="panel-subtitle">Describe your UI in plain English</span>
   </div>
 
   <div class="chat-window" #chatContainer>
@@ -18,7 +12,6 @@
       <div class="chat-message" [ngClass]="msg.role === 'user' ? 'msg-user' : 'msg-ai'">
         @if (msg.role === 'assistant') {
           <div class="ai-avatar">
-            <!-- Icon: AI avatar → alternatives: auto_awesome, smart_toy, psychology, hub -->
             <mat-icon>auto_awesome</mat-icon>
           </div>
         }
@@ -38,17 +31,9 @@
 
   @if (messages.length === 1) {
     <div class="example-prompts">
-      <div class="examples-label">
-        <!-- Icon: lightbulb → alternatives: tips_and_updates, emoji_objects, wb_incandescent -->
-        <mat-icon>tips_and_updates</mat-icon>
-        TRY ASKING:
-      </div>
+      <div class="examples-label">Try an example:</div>
       @for (ex of examples; track ex) {
-        <button class="example-chip" (click)="send(ex)">
-          <!-- Icon: arrow → alternatives: arrow_forward, chevron_right, east, trending_flat -->
-          <mat-icon class="chip-icon">arrow_forward</mat-icon>
-          {{ ex }}
-        </button>
+        <button class="example-chip" (click)="send(ex)">{{ ex }}</button>
       }
     </div>
   }
@@ -57,19 +42,18 @@
     <textarea
       [(ngModel)]="input"
       (keydown)="onKeydown($event)"
-      placeholder="Describe a component..."
+      placeholder="Describe a UI screen... (Enter to send)"
       rows="2"
       [disabled]="loading"
     ></textarea>
     <button
-      mat-mini-fab
+      mat-icon-button
       class="send-btn"
       [disabled]="!input.trim() || loading"
       (click)="send()"
       matTooltip="Send (Enter)"
     >
-      <!-- Icon: send → alternatives: arrow_upward, north, publish, arrow_circle_up -->
-      <mat-icon>arrow_upward</mat-icon>
+      <mat-icon>send</mat-icon>
     </button>
   </div>
 </div>
