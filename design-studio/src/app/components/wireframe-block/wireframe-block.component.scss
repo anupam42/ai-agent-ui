@@ -1,7 +1,7 @@
 $wf-border: #c8cdd3;
 $wf-bg: #f7f8fa;
 $wf-label-color: #8a9bac;
-$wf-accent: #3f51b5;
+$wf-accent: #0078D4;
 
 .wf-block {
   position: relative;
@@ -14,28 +14,49 @@ $wf-accent: #3f51b5;
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.5px;
   color: $wf-label-color;
-  margin-bottom: 6px;
-  .wf-icon { font-size: 12px; }
+  opacity: 0.45;
+  margin-bottom: 4px;
+  .wf-icon { font-size: 11px; }
 }
 
 .wf-mapped-badge {
   position: absolute;
-  top: 4px;
-  right: 4px;
-  background: rgba(63, 81, 181, 0.12);
-  color: $wf-accent;
-  font-size: 9px;
-  font-weight: 600;
-  padding: 2px 6px;
-  border-radius: 10px;
-  border: 1px solid rgba(63, 81, 181, 0.25);
-  pointer-events: none;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0D0D0D;
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 6px;
   white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 100;
+
+  // arrow pointing up toward the component
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-bottom-color: #0D0D0D;
+  }
+}
+
+.wf-block {
+  &:hover > .wf-mapped-badge {
+    opacity: 1;
+  }
 }
 
 // Layout containers

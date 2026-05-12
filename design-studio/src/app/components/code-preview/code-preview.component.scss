@@ -1,4 +1,9 @@
-$glass-border: rgba(255, 255, 255, 0.12);
+$accent:         #0078D4;
+$border:         #EDEBE9;
+$text-primary:   #323130;
+$text-secondary: #605E5C;
+$text-dim:       #A19F9D;
+$surface-alt:    #F3F2F1;
 
 .code-panel {
   display: flex;
@@ -11,9 +16,10 @@ $glass-border: rgba(255, 255, 255, 0.12);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px 12px;
-  border-bottom: 1px solid $glass-border;
+  padding: 14px 20px 12px;
+  border-bottom: 1px solid $border;
   flex-shrink: 0;
+  background: #FFFFFF;
 }
 
 .panel-title {
@@ -22,15 +28,16 @@ $glass-border: rgba(255, 255, 255, 0.12);
   gap: 8px;
   font-size: 14px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.9);
+  color: $text-primary;
 
-  mat-icon { font-size: 18px; width: 18px; height: 18px; color: #7c8cff; }
+  mat-icon { font-size: 18px; width: 18px; height: 18px; color: $accent; }
 }
 
 .download-all-btn {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.6) !important;
-  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: $text-secondary !important;
+  border-color: $border !important;
+  border-radius: 2px !important;
 
   mat-icon { font-size: 16px; width: 16px; height: 16px; }
 }
@@ -43,7 +50,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
   justify-content: center;
   gap: 14px;
   padding: 20px;
-  color: rgba(255, 255, 255, 0.4);
+  color: $text-dim;
   text-align: center;
 
   .empty-icon {
@@ -59,7 +66,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
     line-height: 1.6;
     max-width: 240px;
 
-    strong { color: rgba(255, 255, 255, 0.7); }
+    strong { color: $text-secondary; }
   }
 }
 
@@ -70,17 +77,17 @@ $glass-border: rgba(255, 255, 255, 0.12);
   flex-direction: column;
 
   ::ng-deep .mat-mdc-tab-header {
-    background: rgba(255, 255, 255, 0.04);
-    border-bottom: 1px solid $glass-border;
+    background: $surface-alt;
+    border-bottom: 1px solid $border;
   }
 
   ::ng-deep .mat-mdc-tab-label-container {
     .mat-mdc-tab {
-      color: rgba(255, 255, 255, 0.5);
+      color: $text-dim;
       min-width: 0;
       padding: 0 12px;
 
-      &.mdc-tab--active { color: #a8b4ff; }
+      &.mdc-tab--active { color: $accent; }
     }
   }
 
@@ -118,13 +125,14 @@ $glass-border: rgba(255, 255, 255, 0.12);
   justify-content: flex-end;
   padding: 6px 10px 0;
   flex-shrink: 0;
+  background: #1E1E1E;
 
   button {
-    color: rgba(255, 255, 255, 0.5) !important;
+    color: $text-dim !important;
 
     mat-icon { font-size: 16px; width: 16px; height: 16px; }
 
-    &:hover { color: rgba(255, 255, 255, 0.9) !important; }
+    &:hover { color: #FFFFFF !important; }
   }
 }
 
@@ -133,18 +141,18 @@ $glass-border: rgba(255, 255, 255, 0.12);
   overflow: auto;
   margin: 0;
   padding: 12px 16px;
-  background: rgba(0, 0, 0, 0.25);
+  background: #1E1E1E;
   border-radius: 0;
-  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Courier New', monospace;
+  font-family: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
   font-size: 11.5px;
   line-height: 1.7;
-  color: #d4e0f0;
+  color: #D4D4D4;
   white-space: pre;
   word-break: break-all;
 
   &::-webkit-scrollbar { width: 6px; height: 6px; }
   &::-webkit-scrollbar-track { background: transparent; }
-  &::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 3px; }
+  &::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 2px; }
 
   code {
     font-family: inherit;

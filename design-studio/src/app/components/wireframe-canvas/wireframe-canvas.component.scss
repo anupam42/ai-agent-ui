@@ -1,4 +1,7 @@
-$glass-border: rgba(255, 255, 255, 0.12);
+$accent:       #0078D4;
+$border:       #EDEBE9;
+$text-primary: #323130;
+$text-dim:     #A19F9D;
 
 :host {
   display: flex;
@@ -16,12 +19,14 @@ $glass-border: rgba(255, 255, 255, 0.12);
 }
 
 // ===========================================
-// HEADER - single row: title + toggle + btn
+// HEADER
 // ===========================================
 
 .canvas-header {
   padding: 10px 20px;
+  border-bottom: 1px solid $border;
   flex-shrink: 0;
+  background: #FFFFFF;
 }
 
 .canvas-title-row {
@@ -37,31 +42,31 @@ $glass-border: rgba(255, 255, 255, 0.12);
   gap: 8px;
   font-size: 14px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.9);
+  color: $text-primary;
   white-space: nowrap;
 
-  mat-icon { font-size: 18px; width: 18px; height: 18px; color: #7c8cff; }
+  mat-icon { font-size: 18px; width: 18px; height: 18px; color: $accent; }
 }
 
 .schema-name {
-  background: rgba(124, 140, 255, 0.2);
-  color: #a8b4ff;
+  background: rgba(0, 120, 212, 0.08);
+  color: $accent;
   font-size: 11px;
   font-weight: 600;
   padding: 2px 10px;
-  border-radius: 10px;
-  border: 1px solid rgba(124, 140, 255, 0.3);
+  border-radius: 2px;
+  border: 1px solid rgba(0, 120, 212, 0.22);
   white-space: nowrap;
 }
 
-// Compact toggle — sits inline next to the title
+// Compact toggle — inline next to title
 .viewport-toggle {
-  background: rgba(255, 255, 255, 0.06) !important;
-  border-radius: 6px !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  background: #F3F2F1 !important;
+  border-radius: 2px !important;
+  border: 1px solid #EDEBE9 !important;
 
   ::ng-deep .mat-button-toggle {
-    color: rgba(255, 255, 255, 0.5);
+    color: #605E5C;
     background: transparent;
     border: none !important;
 
@@ -75,31 +80,32 @@ $glass-border: rgba(255, 255, 255, 0.12);
 
     mat-icon { font-size: 14px; width: 14px; height: 14px; line-height: 14px; }
 
-    // remove the checkmark indicator
     .mat-pseudo-checkbox { display: none !important; }
     .mat-button-toggle-indicator-wrapper { display: none !important; }
   }
 
   ::ng-deep .mat-button-toggle-checked {
-    background: rgba(124, 140, 255, 0.25) !important;
-    color: #a8b4ff !important;
+    background: $accent !important;
+    color: white !important;
+
+    mat-icon { color: white; }
   }
 }
 
 .history-select {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
-  color: rgba(255, 255, 255, 0.7);
+  background: #F3F2F1;
+  border: 1px solid #EDEBE9;
+  border-radius: 2px;
+  color: #605E5C;
   font-size: 12px;
   padding: 3px 8px;
   outline: none;
   cursor: pointer;
 
-  option { background: #2d2a44; color: white; }
+  option { background: #FFFFFF; color: #323130; }
 }
 
-// Generate Code button pushed to far right
+// Generate Code button
 .gen-code-btn {
   margin-left: auto;
   display: flex;
@@ -107,12 +113,20 @@ $glass-border: rgba(255, 255, 255, 0.12);
   gap: 5px;
   font-size: 12px;
   font-weight: 600;
+  background-color: $accent !important;
+  color: #FFFFFF !important;
+  border-radius: 2px !important;
 
-  mat-icon { font-size: 16px; width: 16px; height: 16px; }
+  mat-icon { font-size: 16px; width: 16px; height: 16px; color: #FFFFFF; }
+
+  &:disabled {
+    background-color: rgba(0, 120, 212, 0.35) !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+  }
 }
 
 // ===========================================
-// CANVAS BODY - fills remaining space, scrolls
+// CANVAS BODY
 // ===========================================
 
 .canvas-body {
@@ -123,11 +137,11 @@ $glass-border: rgba(255, 255, 255, 0.12);
 
   &::-webkit-scrollbar { width: 4px; }
   &::-webkit-scrollbar-track { background: transparent; }
-  &::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 2px; }
+  &::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.15); border-radius: 2px; }
 }
 
 // ===========================================
-// PLACEHOLDER (empty / loading states)
+// PLACEHOLDER
 // ===========================================
 
 .canvas-placeholder {
@@ -138,24 +152,25 @@ $glass-border: rgba(255, 255, 255, 0.12);
   align-items: center;
   justify-content: center;
   gap: 12px;
-  color: rgba(255, 255, 255, 0.4);
+  color: $text-dim;
   text-align: center;
 
   p { margin: 0; font-size: 14px; }
-  .hint { font-size: 12px; opacity: 0.6; }
+  .hint { font-size: 12px; opacity: 0.7; }
 
   .empty-icon {
     font-size: 48px;
     width: 48px;
     height: 48px;
-    opacity: 0.3;
+    opacity: 0.25;
+    color: $text-dim;
   }
 
   &.loading .loading-spinner {
     width: 40px;
     height: 40px;
-    border: 3px solid rgba(255, 255, 255, 0.1);
-    border-top-color: #7c8cff;
+    border: 3px solid #EDEBE9;
+    border-top-color: $accent;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
   }
@@ -167,9 +182,9 @@ $glass-border: rgba(255, 255, 255, 0.12);
 
 .canvas-viewport {
   background: white;
-  border-radius: 8px;
+  border-radius: 2px;
   overflow: hidden;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1.6px 3.6px rgba(0, 0, 0, 0.13), 0 0.3px 0.9px rgba(0, 0, 0, 0.10);
   margin: 0 auto;
   transition: max-width 0.3s ease;
 }

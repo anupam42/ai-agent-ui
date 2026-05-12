@@ -1,7 +1,8 @@
-$bg-dark: #1a1a2e;
-$bg-mid: #16213e;
-$panel-border: rgba(255, 255, 255, 0.1);
-$glass-bg: rgba(255, 255, 255, 0.06);
+$bg:          #F3F2F1;
+$toolbar:     #0078D4;
+$accent:      #0078D4;
+$panel-border: #EDEBE9;
+$surface:     #FFFFFF;
 
 :host {
   display: block;
@@ -11,10 +12,10 @@ $glass-bg: rgba(255, 255, 255, 0.06);
 
 .nlw-app {
   display: grid;
-  grid-template-rows: 56px 1fr;
+  grid-template-rows: 48px 1fr;
   height: 100vh;
-  background: linear-gradient(135deg, $bg-dark 0%, #2d2a44 50%, #1a2744 100%);
-  color: #fff;
+  background: $bg;
+  color: #323130;
   overflow: hidden;
 }
 
@@ -23,10 +24,8 @@ $glass-bg: rgba(255, 255, 255, 0.06);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
-  background: rgba(0, 0, 0, 0.25);
-  border-bottom: 1px solid $panel-border;
-  backdrop-filter: blur(12px);
+  padding: 0 20px;
+  background: $toolbar;
   z-index: 10;
 }
 
@@ -37,26 +36,24 @@ $glass-bg: rgba(255, 255, 255, 0.06);
 }
 
 .brand-icon {
-  color: #7c8cff;
-  font-size: 22px;
-  width: 22px;
-  height: 22px;
+  color: #FFFFFF;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
 }
 
 .brand-name {
-  font-size: 18px;
-  font-weight: 800;
-  background: linear-gradient(135deg, #a8b4ff, #c084fc);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: -0.5px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #FFFFFF;
+  letter-spacing: 0;
 }
 
 .brand-tagline {
   font-size: 11px;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.6);
   font-weight: 400;
-  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
   padding-left: 10px;
   margin-left: 2px;
 }
@@ -69,18 +66,18 @@ $glass-bg: rgba(255, 255, 255, 0.06);
 
 .version-badge {
   font-size: 10px;
-  color: rgba(255, 255, 255, 0.3);
-  font-family: monospace;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: 'Cascadia Code', 'Courier New', monospace;
 }
 
 .stack-badge {
   font-size: 10px;
   font-weight: 600;
-  color: rgba(168, 180, 255, 0.7);
-  background: rgba(124, 140, 255, 0.12);
-  border: 1px solid rgba(124, 140, 255, 0.25);
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.30);
   padding: 3px 10px;
-  border-radius: 10px;
+  border-radius: 2px;
   letter-spacing: 0.3px;
 }
 
@@ -88,7 +85,7 @@ $glass-bg: rgba(255, 255, 255, 0.06);
 .nlw-panels {
   display: grid;
   grid-template-columns: 320px 1fr 380px;
-  height: calc(100vh - 56px);
+  height: calc(100vh - 48px);
   overflow: hidden;
 }
 
@@ -97,15 +94,14 @@ $glass-bg: rgba(255, 255, 255, 0.06);
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  background: $glass-bg;
-  backdrop-filter: blur(16px);
+  background: $surface;
   border-right: 1px solid $panel-border;
 
   &:last-child { border-right: none; }
 }
 
 .panel-prompt { border-right: 1px solid $panel-border; }
-.panel-canvas { background: rgba(255, 255, 255, 0.04); }
+.panel-canvas { background: $bg; }
 .panel-code {
   border-left: 1px solid $panel-border;
   display: flex;
