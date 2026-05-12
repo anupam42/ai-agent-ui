@@ -1,5 +1,13 @@
 $glass-border: rgba(255, 255, 255, 0.12);
 
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  min-height: 0;
+}
+
 .canvas-panel {
   display: flex;
   flex-direction: column;
@@ -7,12 +15,12 @@ $glass-border: rgba(255, 255, 255, 0.12);
   overflow: hidden;
 }
 
+// ===========================================
+// HEADER - single row: title + toggle + btn
+// ===========================================
+
 .canvas-header {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 16px 20px 12px;
-  border-bottom: 1px solid $glass-border;
+  padding: 10px 20px;
   flex-shrink: 0;
 }
 
@@ -20,6 +28,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .panel-title {
@@ -29,6 +38,7 @@ $glass-border: rgba(255, 255, 255, 0.12);
   font-size: 14px;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.9);
+  white-space: nowrap;
 
   mat-icon { font-size: 18px; width: 18px; height: 18px; color: #7c8cff; }
 }
@@ -41,18 +51,13 @@ $glass-border: rgba(255, 255, 255, 0.12);
   padding: 2px 10px;
   border-radius: 10px;
   border: 1px solid rgba(124, 140, 255, 0.3);
+  white-space: nowrap;
 }
 
-.canvas-controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
+// Compact toggle — sits inline next to the title
 .viewport-toggle {
   background: rgba(255, 255, 255, 0.06) !important;
-  border-radius: 8px !important;
+  border-radius: 6px !important;
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
 
   ::ng-deep .mat-button-toggle {
@@ -60,7 +65,19 @@ $glass-border: rgba(255, 255, 255, 0.12);
     background: transparent;
     border: none !important;
 
-    mat-icon { font-size: 18px; width: 18px; height: 18px; }
+    .mat-button-toggle-button {
+      padding: 0 8px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    mat-icon { font-size: 14px; width: 14px; height: 14px; line-height: 14px; }
+
+    // remove the checkmark indicator
+    .mat-pseudo-checkbox { display: none !important; }
+    .mat-button-toggle-indicator-wrapper { display: none !important; }
   }
 
   ::ng-deep .mat-button-toggle-checked {
@@ -75,23 +92,43 @@ $glass-border: rgba(255, 255, 255, 0.12);
   border-radius: 6px;
   color: rgba(255, 255, 255, 0.7);
   font-size: 12px;
-  padding: 4px 8px;
+  padding: 3px 8px;
   outline: none;
   cursor: pointer;
 
   option { background: #2d2a44; color: white; }
 }
 
+// Generate Code button pushed to far right
+.gen-code-btn {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+
+  mat-icon { font-size: 16px; width: 16px; height: 16px; }
+}
+
+// ===========================================
+// CANVAS BODY - fills remaining space, scrolls
+// ===========================================
+
 .canvas-body {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: 20px;
-  background: rgba(255, 255, 255, 0.03);
 
   &::-webkit-scrollbar { width: 4px; }
   &::-webkit-scrollbar-track { background: transparent; }
   &::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 2px; }
 }
+
+// ===========================================
+// PLACEHOLDER (empty / loading states)
+// ===========================================
 
 .canvas-placeholder {
   height: 100%;
@@ -114,15 +151,13 @@ $glass-border: rgba(255, 255, 255, 0.12);
     opacity: 0.3;
   }
 
-  &.loading {
-    .loading-spinner {
-      width: 40px;
-      height: 40px;
-      border: 3px solid rgba(255, 255, 255, 0.1);
-      border-top-color: #7c8cff;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
+  &.loading .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top-color: #7c8cff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
   }
 }
 
@@ -137,21 +172,4 @@ $glass-border: rgba(255, 255, 255, 0.12);
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
   margin: 0 auto;
   transition: max-width 0.3s ease;
-}
-
-.canvas-footer {
-  padding: 14px 20px;
-  border-top: 1px solid $glass-border;
-  display: flex;
-  justify-content: flex-end;
-  flex-shrink: 0;
-}
-
-.gen-code-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-weight: 600;
-
-  mat-icon { font-size: 18px; width: 18px; height: 18px; }
 }

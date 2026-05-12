@@ -8,9 +8,8 @@
       @if (schema) {
         <span class="schema-name">{{ schema.name }}</span>
       }
-    </div>
-    <div class="canvas-controls">
-      <mat-button-toggle-group [(ngModel)]="viewport" class="viewport-toggle">
+
+      <mat-button-toggle-group [(ngModel)]="viewport" class="viewport-toggle" hideSingleSelectionIndicator>
         <mat-button-toggle value="desktop" matTooltip="Desktop">
           <mat-icon>desktop_windows</mat-icon>
         </mat-button-toggle>
@@ -29,6 +28,18 @@
           }
         </select>
       }
+
+      <button
+        mat-raised-button
+        color="accent"
+        class="gen-code-btn"
+        [disabled]="!schema || loading"
+        (click)="generateCode()"
+        matTooltip="Generate Angular component code from this wireframe"
+      >
+        <mat-icon>code</mat-icon>
+        Generate Code
+      </button>
     </div>
   </div>
 
@@ -49,19 +60,5 @@
         <app-wireframe-block [node]="schema.root" [depth]="0" />
       </div>
     }
-  </div>
-
-  <div class="canvas-footer">
-    <button
-      mat-raised-button
-      color="accent"
-      class="gen-code-btn"
-      [disabled]="!schema || loading"
-      (click)="generateCode()"
-      matTooltip="Generate Angular component code from this wireframe"
-    >
-      <mat-icon>code</mat-icon>
-      Generate Code
-    </button>
   </div>
 </div>
