@@ -9,7 +9,7 @@
         <span class="schema-name">{{ schema.name }}</span>
       }
 
-      <mat-button-toggle-group [(ngModel)]="viewport" class="viewport-toggle">
+      <mat-button-toggle-group [(ngModel)]="viewport" class="viewport-toggle" hideSingleSelectionIndicator>
         <mat-button-toggle value="desktop" matTooltip="Desktop">
           <mat-icon>desktop_windows</mat-icon>
         </mat-button-toggle>

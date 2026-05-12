@@ -65,8 +65,19 @@ $glass-border: rgba(255, 255, 255, 0.12);
     background: transparent;
     border: none !important;
 
-    .mat-button-toggle-button { padding: 0 6px; height: 26px; }
-    mat-icon { font-size: 14px; width: 14px; height: 14px; }
+    .mat-button-toggle-button {
+      padding: 0 8px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    mat-icon { font-size: 14px; width: 14px; height: 14px; line-height: 14px; }
+
+    // remove the checkmark indicator
+    .mat-pseudo-checkbox { display: none !important; }
+    .mat-button-toggle-indicator-wrapper { display: none !important; }
   }
 
   ::ng-deep .mat-button-toggle-checked {
