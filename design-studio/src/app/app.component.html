@@ -12,19 +12,40 @@
     </div>
   </header>
 
-  <div class="nlw-panels">
+  <div class="nlw-panels" [class.canvas-maximized]="isMaximized">
 
-    <div class="panel panel-prompt">
-      <app-prompt-panel />
+    <!-- Prompt panel -->
+    <div class="panel panel-prompt" [class.panel-collapsed]="isMaximized">
+      <div class="collapsed-overlay" matRipple (click)="toggleMaximize()">
+        <div class="collapsed-card-inner">
+          <mat-icon class="collapsed-icon">chat</mat-icon>
+          <span class="collapsed-label">Prompt</span>
+        </div>
+      </div>
+      <div class="panel-content">
+        <app-prompt-panel />
+      </div>
     </div>
 
+    <!-- Canvas (center) -->
     <div class="panel panel-canvas">
-      <app-wireframe-canvas />
+      <app-wireframe-canvas
+        [isMaximized]="isMaximized"
+        (toggleMaximize)="toggleMaximize()" />
     </div>
 
-    <div class="panel panel-code">
-      <app-code-preview />
-      <app-mapping-panel />
+    <!-- Code panel -->
+    <div class="panel panel-code" [class.panel-collapsed]="isMaximized">
+      <div class="collapsed-overlay" matRipple (click)="toggleMaximize()">
+        <div class="collapsed-card-inner">
+          <mat-icon class="collapsed-icon">code</mat-icon>
+          <span class="collapsed-label">Code</span>
+        </div>
+      </div>
+      <div class="panel-content">
+        <app-code-preview />
+        <app-mapping-panel />
+      </div>
     </div>
 
   </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -23,6 +23,9 @@ type Viewport = 'desktop' | 'tablet' | 'mobile';
   styleUrls: ['./wireframe-canvas.component.scss'],
 })
 export class WireframeCanvasComponent implements OnInit {
+  @Input() isMaximized = false;
+  @Output() toggleMaximize = new EventEmitter<void>();
+
   schema: WireframeSchema | null = null;
   loading = false;
   viewport: Viewport = 'desktop';
@@ -37,9 +40,7 @@ export class WireframeCanvasComponent implements OnInit {
   }
 
   generateCode(): void {
-    if (this.schema) {
-      this.wireframeService.generateCode(this.schema);
-    }
+    if (this.schema) this.wireframeService.generateCode(this.schema);
   }
 
   loadVersion(schema: WireframeSchema): void {

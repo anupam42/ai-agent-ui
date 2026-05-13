@@ -1,6 +1,5 @@
 $bg:          #F3F2F1;
 $toolbar:     #0078D4;
-$accent:      #0078D4;
 $panel-border: #EDEBE9;
 $surface:     #FFFFFF;
 
@@ -19,7 +18,8 @@ $surface:     #FFFFFF;
   overflow: hidden;
 }
 
-// Toolbar
+// ─── Toolbar ────────────────────────────────────────────────────────────────
+
 .nlw-toolbar {
   display: flex;
   align-items: center;
@@ -46,7 +46,6 @@ $surface:     #FFFFFF;
   font-size: 15px;
   font-weight: 600;
   color: #FFFFFF;
-  letter-spacing: 0;
 }
 
 .brand-tagline {
@@ -81,15 +80,25 @@ $surface:     #FFFFFF;
   letter-spacing: 0.3px;
 }
 
-// 3-panel grid
+// ─── 3-panel grid ───────────────────────────────────────────────────────────
+
 .nlw-panels {
   display: grid;
   grid-template-columns: 320px 1fr 380px;
   height: calc(100vh - 48px);
   overflow: hidden;
+  // smooth grid transition — the heart of the expand/collapse
+  transition: grid-template-columns 0.42s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.canvas-maximized {
+    grid-template-columns: 64px 1fr 64px;
+  }
 }
 
+// ─── Panel base ─────────────────────────────────────────────────────────────
+
 .panel {
+  position: relative;       // needed for absolute collapsed-overlay
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -101,7 +110,9 @@ $surface:     #FFFFFF;
 }
 
 .panel-prompt { border-right: 1px solid $panel-border; }
+
 .panel-canvas { background: $bg; }
+
 .panel-code {
   border-left: 1px solid $panel-border;
   display: flex;
@@ -115,4 +126,100 @@ $surface:     #FFFFFF;
     flex-direction: column;
     overflow: hidden;
   }
+}
+
+// ─── Panel content wrapper ───────────────────────────────────────────────────
+
+.panel-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+// ─── Collapsed state ─────────────────────────────────────────────────────────
+
+.panel-collapsed {
+  cursor: pointer;
+
+  .panel-content {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .collapsed-overlay {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+// ─── Collapsed overlay ───────────────────────────────────────────────────────
+
+.collapsed-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  // fade in slightly after grid starts collapsing
+  transition: opacity 0.25s ease 0.15s;
+  border-radius: 0;
+
+  // Material ripple colour override
+  --mat-ripple-color: rgba(0, 120, 212, 0.18);
+}
+
+// ─── The visible card inside the overlay ────────────────────────────────────
+
+.collapsed-card-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 48px;
+  height: 140px;
+  background: #FFFFFF;
+  border: 1px solid $panel-border;
+  border-radius: 6px;
+  box-shadow: 0 1.6px 3.6px rgba(0, 0, 0, 0.13), 0 0.3px 0.9px rgba(0, 0, 0, 0.10);
+  position: relative;
+  z-index: 1;
+
+  // hover: card gets a little bigger — springy ease
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.28s ease;
+
+  .collapsed-overlay:hover & {
+    transform: scale(1.10);
+    box-shadow: 0 6px 20px rgba(0, 120, 212, 0.18), 0 2px 6px rgba(0, 0, 0, 0.12);
+  }
+
+  .collapsed-overlay:active & {
+    transform: scale(0.97);
+    transition-duration: 0.1s;
+  }
+}
+
+.collapsed-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: #0078D4;
+}
+
+.collapsed-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #605E5C;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
 }

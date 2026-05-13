@@ -9,6 +9,12 @@
         <span class="schema-name">{{ schema.name }}</span>
       }
 
+      <button mat-icon-button class="maximize-btn"
+        (click)="toggleMaximize.emit()"
+        [matTooltip]="isMaximized ? 'Restore panels' : 'Maximise canvas'">
+        <mat-icon>{{ isMaximized ? 'close_fullscreen' : 'open_in_full' }}</mat-icon>
+      </button>
+
       <mat-button-toggle-group [(ngModel)]="viewport" class="viewport-toggle" hideSingleSelectionIndicator>
         <mat-button-toggle value="desktop" matTooltip="Desktop">
           <mat-icon>desktop_windows</mat-icon>
