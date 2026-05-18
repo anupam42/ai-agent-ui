@@ -4,6 +4,16 @@ $text-primary:   #323130;
 $text-secondary: #605E5C;
 $text-dim:       #A19F9D;
 $surface-alt:    #F3F2F1;
+$font:           'Inter', 'Segoe UI', sans-serif;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  min-height: 0;
+  font-family: $font;
+}
 
 .code-panel {
   display: flex;
@@ -16,7 +26,8 @@ $surface-alt:    #F3F2F1;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 20px 12px;
+  height: 48px;
+  padding: 0 20px;
   border-bottom: 1px solid $border;
   flex-shrink: 0;
   background: #FFFFFF;
@@ -86,6 +97,20 @@ $surface-alt:    #F3F2F1;
       color: $text-dim;
       min-width: 0;
       padding: 0 12px;
+
+      // force Inter across all tab label text
+      font-family: $font !important;
+      font-size: 12px !important;
+      font-weight: 500 !important;
+      letter-spacing: 0 !important;
+
+      .mdc-tab__text-label {
+        font-family: $font !important;
+        font-size: 12px !important;
+        font-weight: 500 !important;
+        letter-spacing: 0 !important;
+        color: inherit;
+      }
 
       &.mdc-tab--active { color: $accent; }
     }

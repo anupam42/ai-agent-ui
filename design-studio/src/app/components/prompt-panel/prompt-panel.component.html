@@ -12,7 +12,7 @@
       <div class="chat-message" [ngClass]="msg.role === 'user' ? 'msg-user' : 'msg-ai'">
         @if (msg.role === 'assistant') {
           <div class="ai-avatar">
-            <mat-icon>auto_awesome</mat-icon>
+            <img src="/assets/ai-avatar.svg" class="ai-avatar-img" alt="AI" />
           </div>
         }
         <div class="msg-bubble">
