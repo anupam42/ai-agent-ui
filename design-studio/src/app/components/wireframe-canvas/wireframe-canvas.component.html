@@ -9,6 +9,12 @@
         <span class="schema-name">{{ schema.name }}</span>
       }
 
+      <button mat-icon-button class="maximize-btn"
+        (click)="toggleMaximize.emit()"
+        [matTooltip]="isMaximized ? 'Restore panels' : 'Maximise canvas'">
+        <mat-icon>{{ isMaximized ? 'close_fullscreen' : 'open_in_full' }}</mat-icon>
+      </button>
+
       <mat-button-toggle-group [(ngModel)]="viewport" class="viewport-toggle" hideSingleSelectionIndicator>
         <mat-button-toggle value="desktop" matTooltip="Desktop">
           <mat-icon>desktop_windows</mat-icon>
@@ -43,7 +49,14 @@
     </div>
   </div>
 
-  <div class="canvas-body">
+  <div class="canvas-body"
+    [class.tool-hand]="tool === 'hand'"
+    [class.is-dragging]="isDragging"
+    (mousedown)="onCanvasMouseDown($event)"
+    (mousemove)="onCanvasMouseMove($event)"
+    (mouseup)="onCanvasMouseUp()"
+    (mouseleave)="onCanvasMouseUp()">
+
     @if (loading) {
       <div class="canvas-placeholder loading">
         <div class="loading-spinner"></div>
@@ -56,9 +69,26 @@
         <p class="hint">Type a description in the prompt panel to get started.</p>
       </div>
     } @else {
-      <div class="canvas-viewport" [style.max-width]="canvasWidth">
+      <div class="canvas-viewport"
+        [style.max-width]="canvasWidth"
+        [style.transform]="'translate(' + offsetX + 'px, ' + offsetY + 'px)'">
         <app-wireframe-block [node]="schema.root" [depth]="0" />
       </div>
     }
+
+    <!-- Floating tool palette -->
+    <div class="floating-toolbar">
+      <button class="tool-btn" [class.active]="tool === 'arrow'"
+        (click)="selectTool('arrow')" matTooltip="Select" matTooltipPosition="above">
+        <mat-icon>near_me</mat-icon>
+        <span class="tool-key">V</span>
+      </button>
+      <div class="tool-sep"></div>
+      <button class="tool-btn" [class.active]="tool === 'hand'"
+        (click)="selectTool('hand')" matTooltip="Pan" matTooltipPosition="above">
+        <mat-icon>pan_tool</mat-icon>
+        <span class="tool-key">H</span>
+      </button>
+    </div>
   </div>
 </div>

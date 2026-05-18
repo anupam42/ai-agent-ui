@@ -12,7 +12,12 @@ html, body {
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-// Reset mat components to not override our dark theme globally
-.mat-mdc-button, .mat-mdc-icon-button, .mat-mdc-raised-button, .mat-mdc-stroked-button {
-  font-family: 'Inter', sans-serif !important;
+// Force Inter on all Material components (overrides Roboto default)
+.mat-mdc-button, .mat-mdc-icon-button, .mat-mdc-raised-button, .mat-mdc-stroked-button,
+.mat-mdc-tab, .mdc-tab, .mdc-tab__text-label,
+.mat-mdc-tab-header, .mat-button-toggle,
+.mat-mdc-select, .mat-mdc-option,
+.mat-mdc-tooltip, .mdc-tooltip__surface {
+  font-family: 'Inter', 'Segoe UI', sans-serif !important;
+  letter-spacing: 0 !important;
 }
