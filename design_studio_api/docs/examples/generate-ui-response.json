@@ -1,0 +1,64 @@
+{
+  "id": "2b66db8c-78b0-4a65-88a8-c35b96303f44",
+  "generatedAtUtc": "2026-05-17T16:45:00Z",
+  "prompt": "Create a responsive SaaS login screen with email, password, forgot password link, and a primary sign in action.",
+  "framework": "react",
+  "preview": {
+    "title": "SaaS Login Screen",
+    "description": "Centered authentication screen with email and password controls.",
+    "layout": "centered-auth-card",
+    "theme": {
+      "primaryColor": "#2563eb",
+      "backgroundColor": "#f8fafc",
+      "textColor": "#0f172a",
+      "fontFamily": "Inter, sans-serif"
+    },
+    "components": [
+      {
+        "id": "auth-screen",
+        "type": "screen",
+        "label": null,
+        "text": null,
+        "props": {
+          "maxWidth": "420px"
+        },
+        "children": [
+          {
+            "id": "email-input",
+            "type": "input",
+            "label": "Email address",
+            "text": null,
+            "props": {
+              "inputType": "email",
+              "placeholder": "you@example.com"
+            },
+            "children": []
+          },
+          {
+            "id": "submit-button",
+            "type": "button",
+            "label": null,
+            "text": "Sign in",
+            "props": {
+              "variant": "primary"
+            },
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  "sourceCode": {
+    "language": "tsx",
+    "framework": "react",
+    "files": [
+      {
+        "path": "LoginScreen.tsx",
+        "content": "export default function LoginScreen() { return <main>Sign in</main>; }"
+      }
+    ]
+  },
+  "notes": [
+    "Example response only; POST /api/ui-generations calls DeepSeek."
+  ]
+}
