@@ -1,0 +1,49 @@
+{
+  "info": {
+    "name": "UI Code Generator API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5211"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/health"
+      }
+    },
+    {
+      "name": "Example Payload",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/ui-generations/example"
+      }
+    },
+    {
+      "name": "Generate UI",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"prompt\": \"Create a responsive SaaS login screen with email, password, forgot password link, and a primary sign in action.\",\n  \"framework\": \"react\",\n  \"styling\": \"tailwind\",\n  \"componentName\": \"LoginScreen\",\n  \"includeResponsiveLayout\": true,\n  \"includeAccessibility\": true\n}"
+        },
+        "url": "{{baseUrl}}/api/ui-generations"
+      }
+    }
+  ]
+}

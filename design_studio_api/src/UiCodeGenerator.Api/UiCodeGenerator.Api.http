@@ -1,0 +1,24 @@
+@UiCodeGenerator.Api_HostAddress = http://localhost:5211
+
+GET {{UiCodeGenerator.Api_HostAddress}}/health
+Accept: application/json
+
+###
+
+GET {{UiCodeGenerator.Api_HostAddress}}/api/ui-generations/example
+Accept: application/json
+
+###
+
+POST {{UiCodeGenerator.Api_HostAddress}}/api/ui-generations
+Content-Type: application/json
+Accept: application/json
+
+{
+  "prompt": "Create a responsive SaaS login screen with email, password, forgot password link, and a primary sign in action.",
+  "framework": "react",
+  "styling": "tailwind",
+  "componentName": "LoginScreen",
+  "includeResponsiveLayout": true,
+  "includeAccessibility": true
+}
