@@ -1,59 +1,140 @@
 <div class="prompt-panel">
+
+  <!-- HEADER -->
   <div class="panel-header">
-    <span class="panel-title">
-      <mat-icon>chat</mat-icon>
-      Prompt
-    </span>
-    <span class="panel-subtitle">Describe your UI in plain English</span>
+    <div class="header-row">
+      <div class="header-left">
+        <div class="header-icon-wrap">
+          <mat-icon>forum</mat-icon>
+        </div>
+        <div class="header-text">
+          <span class="panel-title">Prompt</span>
+          <span class="panel-subtitle">Where words take shape</span>
+        </div>
+      </div>
+      @if (messageCount > 0) {
+        <button
+          mat-icon-button
+          class="new-chat-btn"
+          (click)="clearChat()"
+          matTooltip="New conversation"
+        >
+          <mat-icon>add_comment</mat-icon>
+        </button>
+      }
+    </div>
   </div>
 
+  @if (loading) {
+    <mat-progress-bar mode="indeterminate" class="chat-progress"></mat-progress-bar>
+  }
+
+  <!-- MESSAGES -->
   <div class="chat-window" #chatContainer>
     @for (msg of messages; track msg.id) {
-      <div class="chat-message" [ngClass]="msg.role === 'user' ? 'msg-user' : 'msg-ai'">
+      <div
+        class="chat-message"
+        [class]="'chat-message ' + (msg.role === 'user' ? 'msg-user' : 'msg-ai')"
+        (mouseenter)="hoveredMsgId = msg.id"
+        (mouseleave)="hoveredMsgId = null"
+      >
         @if (msg.role === 'assistant') {
-          <div class="ai-avatar">
-            <img src="/assets/ai-avatar.svg" class="ai-avatar-img" alt="AI" />
+          <div class="avatar ai-avatar">
+            <mat-icon>auto_awesome</mat-icon>
           </div>
         }
+
         <div class="msg-bubble">
           @if (msg.isLoading) {
-            <div class="loading-dots">
-              <span></span><span></span><span></span>
+            <div class="thinking-indicator">
+              <div class="shimmer-bar"></div>
+              <div class="shimmer-bar short"></div>
+              <span class="thinking-text">Generating wireframe…</span>
             </div>
           } @else {
-            <p>{{ msg.content }}</p>
-            <div class="msg-time">{{ msg.timestamp | date: 'shortTime' }}</div>
+            <div class="msg-content" [innerHTML]="toHtml(msg.content)"></div>
+            <div class="msg-footer">
+             <span class="msg-time">{{ formatTime(msg.timestamp) }}</span>
+              @if (msg.role === 'assistant' && !msg.isLoading && hoveredMsgId === msg.id) {
+                <button
+                  class="msg-action-btn"
+                  (click)="copyMessage(msg)"
+                  matTooltip="Copy"
+                >
+                  <mat-icon>{{ copiedMsgId === msg.id ? 'check' : 'content_copy' }}</mat-icon>
+                </button>
+              }
+            </div>
           }
         </div>
+
+        @if (msg.role === 'user') {
+          <div class="avatar user-avatar">
+            <mat-icon>person</mat-icon>
+          </div>
+        }
       </div>
     }
   </div>
 
-  @if (messages.length === 1) {
-    <div class="example-prompts">
-      <div class="examples-label">Try an example:</div>
-      @for (ex of examples; track ex) {
-        <button class="example-chip" (click)="send(ex)">{{ ex }}</button>
-      }
+  <!-- EXAMPLES (2×2 grid) -->
+  @if (showExamples) {
+    <div class="example-section">
+      <div class="examples-header">
+        <mat-icon>tips_and_updates</mat-icon>
+        <span>Try an example</span>
+      </div>
+      <div class="example-grid">
+        @for (ex of examples; track ex.text) {
+          <button
+            class="example-card"
+            (click)="send(ex.text)"
+            [disabled]="loading"
+          >
+            <div class="card-top">
+              <mat-icon class="card-icon">{{ ex.icon }}</mat-icon>
+              <span class="card-tag">{{ ex.tag }}</span>
+            </div>
+            <span class="card-text">{{ ex.text }}</span>
+          </button>
+        }
+      </div>
     </div>
   }
 
-  <div class="chat-input-row">
-    <textarea
-      [(ngModel)]="input"
-      (keydown)="onKeydown($event)"
-      placeholder="Describe a UI screen... (Enter to send)"
-      rows="2"
-      [disabled]="loading"
-    ></textarea>
-    <button
-      mat-icon-button
-      class="send-btn"
-      [disabled]="!input.trim() || loading"
-      (click)="send()"
-      matTooltip="Send (Enter)"
-    >
-      <mat-icon>send</mat-icon>
-    </button>
+  <!-- INPUT -->
+  <div class="chat-input-area">
+    <div class="input-container">
+      <textarea
+        #inputField
+        [(ngModel)]="input"
+        (keydown)="onKeydown($event)"
+        (input)="autoResize($event)"
+        placeholder="What would you like to build?"
+        rows="1"
+        [disabled]="loading"
+        maxlength="2000"
+      ></textarea>
+      <div class="input-right">
+        @if (input.length > 100) {
+          <span class="char-counter" [class.warn]="input.length > 1800">
+            {{ input.length }}/2k
+          </span>
+        }
+        <button
+          mat-mini-fab
+          class="send-btn"
+          [disabled]="!input.trim() || loading"
+          (click)="send()"
+          matTooltip="Send (Enter)"
+        >
+          <mat-icon>arrow_upward</mat-icon>
+        </button>
+      </div>
+    </div>
+    <div class="input-hint">
+      <span>Press <kbd>Enter</kbd> to send · <kbd>Shift + Enter</kbd> for new line</span>
+    </div>
   </div>
+
 </div>
