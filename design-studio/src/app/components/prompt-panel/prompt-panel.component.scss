@@ -1,12 +1,16 @@
-$accent:         #0078D4;
-$border:         #EDEBE9;
-$text-primary:   #323130;
-$text-secondary: #605E5C;
-$text-dim:       #A19F9D;
-$surface:        #FFFFFF;
-$surface-alt:    #F3F2F1;
-$chat-bg:        #EFF6FF;   // very soft blue — gives chat panel its own identity
-$font:           'Inter', 'Segoe UI', sans-serif;
+// ── LIGHT THEME VARIABLES (Fluent/Microsoft style) ──
+$accent:       #0078D4;
+$accent-dim:   rgba(0, 120, 212, 0.10);
+$surface-0:    #FAFAFA;
+$surface-1:    #F3F2F1;
+$surface-2:    #EDEBE9;
+$surface-3:    #C8C6C4;
+$border:       #EDEBE9;
+$border-hover: #C8C6C4;
+$text-1:       #323130;
+$text-2:       #605E5C;
+$text-3:       #A19F9D;
+$radius:       16px;
 
 :host {
   display: flex;
@@ -14,7 +18,6 @@ $font:           'Inter', 'Segoe UI', sans-serif;
   height: 100%;
   overflow: hidden;
   min-height: 0;
-  font-family: $font;
 }
 
 .prompt-panel {
@@ -22,240 +25,382 @@ $font:           'Inter', 'Segoe UI', sans-serif;
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  background: $chat-bg;
+  background: #FFFFFF;
 }
 
-// ===========================================
-// HEADER — single row, matches other panels
-// ===========================================
-
+// ── HEADER ──
 .panel-header {
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid $border;
+  flex-shrink: 0;
+  background: #FFFFFF;
+}
+
+.header-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 48px;
-  padding: 0 20px;
-  border-bottom: 1px solid $border;
-  flex-shrink: 0;
-  background: $surface;
 }
 
-.panel-title {
+.header-left {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  color: $text-primary;
-
-  mat-icon { font-size: 18px; width: 18px; height: 18px; color: $accent; }
+  gap: 10px;
 }
 
-.panel-subtitle {
-  font-size: 11px;
-  color: $text-dim;
+.header-icon-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: $accent-dim;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  mat-icon { font-size: 17px; width: 17px; height: 17px; color: $accent; }
 }
 
-// ===========================================
-// CHAT WINDOW
-// ===========================================
+.header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
 
+.panel-title    { font-size: 13.5px; font-weight: 600; color: $text-1; }
+.panel-subtitle { font-size: 11px;   color: $text-3; }
+
+.new-chat-btn {
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+  color: $text-2 !important;
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  &:hover { color: $accent !important; }
+}
+
+// ── PROGRESS ──
+.chat-progress {
+  flex-shrink: 0;
+  height: 2px !important;
+
+  ::ng-deep .mdc-linear-progress__bar-inner   { border-color: $accent !important; }
+  ::ng-deep .mdc-linear-progress__buffer-bar  { background-color: $accent-dim !important; }
+}
+
+// ── CHAT ──
 .chat-window {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding: 16px;
+  padding: 20px 14px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  background: $chat-bg;
+  gap: 16px;
+  background: #FFFFFF;
 
   &::-webkit-scrollbar { width: 4px; }
   &::-webkit-scrollbar-track { background: transparent; }
-  &::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.12); border-radius: 2px; }
+  &::-webkit-scrollbar-thumb { background: $surface-3; border-radius: 2px; }
 }
 
-// ===========================================
-// MESSAGES
-// ===========================================
-
+// ── MESSAGES ──
 .chat-message {
   display: flex;
   gap: 10px;
-  align-items: flex-end;
-  animation: msg-in 0.2s ease-out;
+  align-items: flex-start;
+  animation: appear 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 
   &.msg-user {
     flex-direction: row-reverse;
 
     .msg-bubble {
       background: $accent;
-      border-radius: 4px 4px 0 4px;
-      color: #FFFFFF;
-      max-width: 80%;
-      box-shadow: 0 2px 8px rgba(0, 120, 212, 0.25);
+      border-radius: $radius $radius 5px $radius;
+      color: #fff;
+      max-width: 82%;
     }
+    .msg-time { color: $text-3; }
   }
 
-  &.msg-ai .msg-bubble {
-    background: $surface;
-    border: 1px solid $border;
-    border-radius: 4px 4px 4px 0;
-    color: $text-primary;
-    max-width: 85%;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  &.msg-ai {
+    .msg-bubble {
+      background: $surface-1;
+      border: 1px solid $border;
+      border-radius: $radius $radius $radius 5px;
+      color: $text-1;
+      max-width: 88%;
+      transition: border-color 0.15s;
+    }
+
+    &:hover .msg-bubble { border-color: $border-hover; }
   }
 }
 
-@keyframes msg-in {
-  from { opacity: 0; transform: translateY(5px); }
+@keyframes appear {
+  from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-.ai-avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 4px;
-  flex-shrink: 0;
+.avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  background: $accent;
+  flex-shrink: 0;
+  margin-top: 2px;
+
+  mat-icon { font-size: 14px; width: 14px; height: 14px; color: #fff; }
 }
 
-.ai-avatar-img {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-  display: block;
-}
+.ai-avatar   { background: $accent; }
+.user-avatar { background: $surface-2; }
 
-.msg-bubble {
-  padding: 10px 14px;
+.msg-bubble { padding: 12px 14px; min-width: 48px; }
 
-  p {
-    margin: 0;
-    font-size: 13px;
-    line-height: 1.5;
-    white-space: pre-wrap;
-    word-break: break-word;
+.msg-content {
+  font-size: 13px;
+  line-height: 1.65;
+  word-break: break-word;
+
+  ::ng-deep {
+    strong { color: $text-1; font-weight: 600; }
+    code {
+      background: $surface-2;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+      font-size: 11.5px;
+      color: $text-1;
+    }
   }
 }
 
-.msg-time {
-  font-size: 10px;
-  color: $text-dim;
-  margin-top: 4px;
-  text-align: right;
-}
-
-// ===========================================
-// LOADING DOTS
-// ===========================================
-
-.loading-dots {
+.msg-footer {
   display: flex;
-  gap: 5px;
   align-items: center;
-  padding: 4px 0;
-
-  span {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: $accent;
-    animation: dot-pulse 1.4s infinite ease-in-out;
-
-    &:nth-child(2) { animation-delay: 0.2s; }
-    &:nth-child(3) { animation-delay: 0.4s; }
-  }
+  gap: 8px;
+  margin-top: 8px;
 }
 
-@keyframes dot-pulse {
-  0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
-  40% { transform: scale(1); opacity: 1; }
+.msg-time { font-size: 10px; color: $text-3; }
+
+.msg-action-btn {
+  background: none;
+  border: 1px solid $border;
+  border-radius: 6px;
+  color: $text-2;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: auto;
+  padding: 0;
+  transition: all 0.15s;
+  animation: fade-in 0.12s ease;
+
+  mat-icon { font-size: 13px; width: 13px; height: 13px; }
+  &:hover { background: $surface-1; color: $text-1; border-color: $border-hover; }
 }
 
-// ===========================================
-// EXAMPLE PROMPTS
-// ===========================================
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 
-.example-prompts {
-  padding: 0 16px 12px;
+// ── SHIMMER LOADING ──
+.thinking-indicator {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  flex-shrink: 0;
-  background: $chat-bg;
+  gap: 8px;
+  padding: 2px 0;
 }
 
-.examples-label {
+.shimmer-bar {
+  height: 10px;
+  width: 100%;
+  border-radius: 5px;
+  background: linear-gradient(90deg, $surface-1 25%, $surface-2 50%, $surface-1 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+
+  &.short { width: 60%; }
+}
+
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+.thinking-text { font-size: 11px; color: $text-3; font-style: italic; }
+
+// ── EXAMPLES (2×2 GRID) ──
+.example-section {
+  flex-shrink: 0;
+  padding: 14px 14px 16px;
+  border-top: 1px solid $border;
+  background: #FFFFFF;
+}
+
+.examples-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 11px;
-  color: $text-dim;
   font-weight: 600;
+  color: $text-2;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  margin-bottom: 10px;
+
+  mat-icon { font-size: 15px; width: 15px; height: 15px; color: #F7A700; }
 }
 
-.example-chip {
-  background: $surface;
+.example-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.example-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: $surface-1;
   border: 1px solid $border;
-  border-radius: 2px;
-  color: $text-secondary;
-  font-size: 12px;
-  padding: 8px 12px;
-  cursor: pointer;
+  border-radius: 6px;
+  color: $text-2;
   text-align: left;
-  line-height: 1.4;
-  font-family: $font;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-icon {
+    font-size: 18px; width: 18px; height: 18px;
+    color: $accent;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+  }
+
+  .card-tag {
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: $text-3;
+    background: $surface-2;
+    padding: 2px 7px;
+    border-radius: 4px;
+    transition: all 0.15s;
+  }
+
+  .card-text { font-size: 12px; line-height: 1.4; }
 
   &:hover {
-    background: rgba(0, 120, 212, 0.06);
-    border-color: rgba(0, 120, 212, 0.30);
-    color: $accent;
+    background: #EFF6FC;
+    border-color: rgba(0, 120, 212, 0.25);
+    color: $text-1;
+
+    .card-icon { opacity: 1; }
+    .card-tag  { background: $accent-dim; color: $accent; }
   }
+
+  &:active   { transform: scale(0.98); }
+  &:disabled { opacity: 0.4; pointer-events: none; }
 }
 
-// ===========================================
-// INPUT ROW
-// ===========================================
-
-.chat-input-row {
-  display: flex;
-  gap: 8px;
-  align-items: flex-end;
-  padding: 12px 16px;
-  border-top: 1px solid $border;
+// ── INPUT ──
+.chat-input-area {
   flex-shrink: 0;
-  background: $surface;
+  padding: 12px 14px 10px;
+  border-top: 1px solid $border;
+  background: #FFFFFF;
+}
+
+.input-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  background: $surface-1;
+  border: 1px solid $border;
+  border-radius: 8px;
+  padding: 8px 8px 8px 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:focus-within {
+    border-color: rgba(0, 120, 212, 0.5);
+    box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.08);
+  }
 
   textarea {
     flex: 1;
-    background: $surface;
-    border: 1px solid $border;
-    border-radius: 2px;
-    color: $text-primary;
+    background: transparent;
+    border: none;
+    color: $text-1;
     font-size: 13px;
-    padding: 10px 14px;
+    padding: 4px 0;
     resize: none;
-    font-family: $font;
-    line-height: 1.4;
-    transition: border-color 0.15s, box-shadow 0.15s;
+    font-family: inherit;
+    line-height: 1.5;
+    max-height: 120px;
+    overflow-y: auto;
 
-    &::placeholder { color: $text-dim; }
-    &:focus {
-      outline: none;
-      border-color: $accent;
-      box-shadow: 0 0 0 1px $accent;
-    }
-    &:disabled { opacity: 0.5; cursor: not-allowed; }
+    &::placeholder { color: $text-3; }
+    &:focus        { outline: none; }
+    &:disabled     { opacity: 0.4; }
+
+    &::-webkit-scrollbar       { width: 3px; }
+    &::-webkit-scrollbar-thumb { background: $surface-3; border-radius: 2px; }
   }
 }
 
-.send-btn {
-  color: $accent !important;
+.input-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
 
-  &:disabled { opacity: 0.4; }
+.char-counter {
+  font-size: 10px;
+  color: $text-3;
+  font-variant-numeric: tabular-nums;
+  &.warn { color: #D13438; }
+}
+
+.send-btn {
+  width: 32px !important;
+  height: 32px !important;
+  background: $accent !important;
+  box-shadow: none !important;
+  border-radius: 6px !important;
+  transition: transform 0.15s !important;
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; color: #fff; }
+  &:hover:not([disabled]) { transform: scale(1.06); }
+  &[disabled] { background: $surface-2 !important; color: $text-3 !important; }
+}
+
+.input-hint {
+  text-align: center;
+  padding-top: 7px;
+
+  span { font-size: 10px; color: $text-3; }
+
+  kbd {
+    display: inline-block;
+    background: $surface-1;
+    border: 1px solid $border;
+    border-radius: 3px;
+    padding: 0 4px;
+    font-family: inherit;
+    font-size: 10px;
+    color: $text-2;
+    line-height: 1.7;
+  }
 }
