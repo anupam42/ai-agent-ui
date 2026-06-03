@@ -1,5 +1,7 @@
 using System.Runtime.ExceptionServices;
+
 using Microsoft.AspNetCore.Mvc;
+
 using UiCodeGenerator.Application.Exceptions;
 
 namespace UiCodeGenerator.Api.Middleware;
@@ -28,20 +30,14 @@ public sealed class ExceptionHandlingMiddleware(
     private async Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         if (context.Response.HasStarted)
-        {
             ExceptionDispatchInfo.Capture(exception).Throw();
-        }
 
         var problem = CreateProblemDetails(context, exception);
 
         if (problem.Status >= StatusCodes.Status500InternalServerError)
-        {
             logger.LogError(exception, "Unhandled API exception.");
-        }
         else
-        {
             logger.LogWarning(exception, "API exception mapped to {StatusCode}.", problem.Status);
-        }
 
         context.Response.StatusCode = problem.Status ?? StatusCodes.Status500InternalServerError;
         context.Response.ContentType = "application/problem+json";
@@ -57,11 +53,15 @@ public sealed class ExceptionHandlingMiddleware(
                 StatusCodes.Status500InternalServerError,
                 "AI provider is not configured",
                 exception.Message),
+
             AiProviderException providerException => MapProviderException(providerException),
+
             _ => (
                 StatusCodes.Status500InternalServerError,
                 "Unexpected server error",
-                environment.IsDevelopment() ? exception.Message : "An unexpected error occurred.")
+                environment.IsDevelopment()
+                    ? exception.Message
+                    : "An unexpected error occurred.")
         };
 
         var problem = new ProblemDetails
@@ -75,29 +75,33 @@ public sealed class ExceptionHandlingMiddleware(
         problem.Extensions["traceId"] = context.TraceIdentifier;
 
         if (exception is AiProviderException provider && provider.ProviderStatusCode.HasValue)
-        {
             problem.Extensions["providerStatusCode"] = provider.ProviderStatusCode.Value;
-        }
 
         return problem;
     }
 
-    private (int Status, string Title, string Detail) MapProviderException(AiProviderException exception)
-    {
-        return exception.ProviderStatusCode switch
+    private (int Status, string Title, string Detail) MapProviderException(
+        AiProviderException exception) =>
+        exception.ProviderStatusCode switch
         {
             StatusCodes.Status429TooManyRequests => (
                 StatusCodes.Status429TooManyRequests,
                 "AI provider rate limit reached",
                 exception.Message),
-            StatusCodes.Status500InternalServerError or StatusCodes.Status503ServiceUnavailable => (
+
+            StatusCodes.Status500InternalServerError or
+            StatusCodes.Status503ServiceUnavailable => (
                 StatusCodes.Status503ServiceUnavailable,
                 "AI provider is unavailable",
-                environment.IsDevelopment() ? exception.Message : "The AI provider is temporarily unavailable."),
+                environment.IsDevelopment()
+                    ? exception.Message
+                    : "The AI provider is temporarily unavailable."),
+
             _ => (
                 StatusCodes.Status502BadGateway,
                 "AI provider request failed",
-                environment.IsDevelopment() ? exception.Message : "The AI provider request failed.")
+                environment.IsDevelopment()
+                    ? exception.Message
+                    : "The AI provider request failed.")
         };
-    }
 }
