@@ -1,13 +1,22 @@
-import { Component, Input, Output, EventEmitter, OnInit, HostListener } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  HostListener,
+} from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { WireframeService } from '../../services/wireframe.service';
 import { WireframeSchema } from '../../models/wireframe.model';
 import { WireframeBlockComponent } from '../wireframe-block/wireframe-block.component';
+import { GeneratedCode } from '../../models/wireframe.model';
 
 type Viewport = 'desktop' | 'tablet' | 'mobile';
 type Tool = 'arrow' | 'hand';
@@ -16,8 +25,12 @@ type Tool = 'arrow' | 'hand';
   selector: 'app-wireframe-canvas',
   standalone: true,
   imports: [
-    DatePipe, FormsModule,
-    MatButtonModule, MatButtonToggleModule, MatIconModule, MatTooltipModule,
+    DatePipe,
+    FormsModule,
+    MatButtonModule,
+    MatButtonToggleModule,
+    MatIconModule,
+    MatTooltipModule,
     WireframeBlockComponent,
   ],
   templateUrl: './wireframe-canvas.component.html',
@@ -31,6 +44,7 @@ export class WireframeCanvasComponent implements OnInit {
   loading = false;
   viewport: Viewport = 'desktop';
   history: WireframeSchema[] = [];
+  code: GeneratedCode = { html: '', ts: '', scss: '' };
 
   // canvas pan state
   tool: Tool = 'arrow';
@@ -42,17 +56,26 @@ export class WireframeCanvasComponent implements OnInit {
   private offsetStartX = 0;
   private offsetStartY = 0;
 
-  constructor(private wireframeService: WireframeService) {}
+  constructor(
+    private readonly sanitizer: DomSanitizer,
+    private readonly wireframeService: WireframeService,
+  ) {}
 
   ngOnInit(): void {
-    this.wireframeService.schema$.subscribe(s => {
+    this.wireframeService.schema$.subscribe((s) => {
       this.schema = s;
       // re-centre when new schema loads
       this.offsetX = 0;
       this.offsetY = 0;
     });
-    this.wireframeService.loading$.subscribe(l => (this.loading = l));
-    this.wireframeService.history$.subscribe(h => (this.history = h));
+
+    this.wireframeService.loading$.subscribe((l) => (this.loading = l));
+
+    this.wireframeService.history$.subscribe((h) => (this.history = h));
+
+    this.wireframeService.code$.subscribe(
+      (c) => (this.code = c ?? { html: '', ts: '', scss: '' }),
+    );
   }
 
   generateCode(): void {
@@ -100,5 +123,9 @@ export class WireframeCanvasComponent implements OnInit {
     if (e.key === 'h' || e.key === 'H') this.tool = 'hand';
     if (e.key === 'v' || e.key === 'V') this.tool = 'arrow';
     if (e.key === 'Escape') this.tool = 'arrow';
+  }
+
+  safeHtml(html: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 }

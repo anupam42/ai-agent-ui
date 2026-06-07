@@ -1,176 +1,343 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
 import {
-  WireframeSchema, WireframeNode, ComponentMapping,
-  GeneratedCode, WireframeBlockType
+  WireframeSchema,
+  WireframeNode,
+  ComponentMapping,
+  GeneratedCode,
 } from '../models/wireframe.model';
+import { CodeGenResponse } from '../models/codegen.model';
 
 const DASHBOARD_SCHEMA: WireframeNode = {
   type: 'column',
   children: [
     {
-      type: 'header', label: 'App Header', sticky: true,
+      type: 'header',
+      label: 'App Header',
+      sticky: true,
       mappedComponent: 'MatToolbar',
       children: [
         { type: 'logo', label: 'Logo', mappedComponent: 'BrandLogoComponent' },
-        { type: 'nav', items: ['Dashboard', 'Reports', 'Analytics', 'Settings'], mappedComponent: 'MatButton' },
-        { type: 'icon-button', label: 'Notifications', mappedComponent: 'MatIconButton' },
-      ]
+        {
+          type: 'nav',
+          items: ['Dashboard', 'Reports', 'Analytics', 'Settings'],
+          mappedComponent: 'MatButton',
+        },
+        {
+          type: 'icon-button',
+          label: 'Notifications',
+          mappedComponent: 'MatIconButton',
+        },
+      ],
     },
     {
       type: 'row',
       children: [
         {
-          type: 'sidebar', label: 'Navigation Sidebar', width: '240px',
+          type: 'sidebar',
+          label: 'Navigation Sidebar',
+          width: '240px',
           mappedComponent: 'MatSidenav',
-          items: ['Overview', 'Analytics', 'Reports', 'Users', 'Settings']
+          items: ['Overview', 'Analytics', 'Reports', 'Users', 'Settings'],
         },
         {
-          type: 'main', label: 'Main Content',
+          type: 'main',
+          label: 'Main Content',
           children: [
             {
               type: 'row',
               children: [
-                { type: 'stat-card', label: 'Total Users', value: '12,840', span: 3, mappedComponent: 'SummaryCardComponent' },
-                { type: 'stat-card', label: 'Revenue', value: '$48,295', span: 3, mappedComponent: 'SummaryCardComponent' },
-                { type: 'stat-card', label: 'Active Sessions', value: '1,284', span: 3, mappedComponent: 'SummaryCardComponent' },
-                { type: 'stat-card', label: 'Conversion Rate', value: '3.6%', span: 3, mappedComponent: 'SummaryCardComponent' },
-              ]
+                {
+                  type: 'stat-card',
+                  label: 'Total Users',
+                  value: '12,840',
+                  span: 3,
+                  mappedComponent: 'SummaryCardComponent',
+                },
+                {
+                  type: 'stat-card',
+                  label: 'Revenue',
+                  value: '$48,295',
+                  span: 3,
+                  mappedComponent: 'SummaryCardComponent',
+                },
+                {
+                  type: 'stat-card',
+                  label: 'Active Sessions',
+                  value: '1,284',
+                  span: 3,
+                  mappedComponent: 'SummaryCardComponent',
+                },
+                {
+                  type: 'stat-card',
+                  label: 'Conversion Rate',
+                  value: '3.6%',
+                  span: 3,
+                  mappedComponent: 'SummaryCardComponent',
+                },
+              ],
             },
             {
-              type: 'data-table', label: 'Recent Orders', mappedComponent: 'MatTable',
-              columns: ['ID', 'Customer', 'Amount', 'Status', 'Date'], rows: 5
-            }
-          ]
-        }
-      ]
-    }
-  ]
+              type: 'data-table',
+              label: 'Recent Orders',
+              mappedComponent: 'MatTable',
+              columns: ['ID', 'Customer', 'Amount', 'Status', 'Date'],
+              rows: 5,
+            },
+          ],
+        },
+      ],
+    },
+  ],
 };
 
 const LOGIN_SCHEMA: WireframeNode = {
-  type: 'hero', label: 'Login Page',
+  type: 'hero',
+  label: 'Login Page',
   children: [
     {
-      type: 'card', label: 'Login Card', mappedComponent: 'MatCard',
+      type: 'card',
+      label: 'Login Card',
+      mappedComponent: 'MatCard',
       children: [
-        { type: 'logo', label: 'App Logo', mappedComponent: 'BrandLogoComponent' },
-        { type: 'text', label: 'Welcome Back', placeholder: 'Sign in to your account' },
         {
-          type: 'form', label: 'Login Form', mappedComponent: 'ReactiveFormsModule',
-          children: [
-            { type: 'input', label: 'Email', placeholder: 'Enter your email', mappedComponent: 'MatFormField' },
-            { type: 'input', label: 'Password', placeholder: 'Enter password', mappedComponent: 'MatFormField' },
-            { type: 'button', label: 'Sign In', mappedComponent: 'MatRaisedButton' },
-          ]
+          type: 'logo',
+          label: 'App Logo',
+          mappedComponent: 'BrandLogoComponent',
         },
-        { type: 'text', label: '', placeholder: 'Forgot password? · Create account' }
-      ]
-    }
-  ]
+        {
+          type: 'text',
+          label: 'Welcome Back',
+          placeholder: 'Sign in to your account',
+        },
+        {
+          type: 'form',
+          label: 'Login Form',
+          mappedComponent: 'ReactiveFormsModule',
+          children: [
+            {
+              type: 'input',
+              label: 'Email',
+              placeholder: 'Enter your email',
+              mappedComponent: 'MatFormField',
+            },
+            {
+              type: 'input',
+              label: 'Password',
+              placeholder: 'Enter password',
+              mappedComponent: 'MatFormField',
+            },
+            {
+              type: 'button',
+              label: 'Sign In',
+              mappedComponent: 'MatRaisedButton',
+            },
+          ],
+        },
+        {
+          type: 'text',
+          label: '',
+          placeholder: 'Forgot password? · Create account',
+        },
+      ],
+    },
+  ],
 };
 
 const LANDING_SCHEMA: WireframeNode = {
   type: 'column',
   children: [
     {
-      type: 'header', label: 'App Header', sticky: true, mappedComponent: 'MatToolbar',
+      type: 'header',
+      label: 'App Header',
+      sticky: true,
+      mappedComponent: 'MatToolbar',
       children: [
         { type: 'logo', label: 'Logo', mappedComponent: 'BrandLogoComponent' },
-        { type: 'nav', items: ['Features', 'Pricing', 'About', 'Contact'], mappedComponent: 'MatButton' },
-        { type: 'button', label: 'Get Started', mappedComponent: 'MatRaisedButton' }
-      ]
+        {
+          type: 'nav',
+          items: ['Features', 'Pricing', 'About', 'Contact'],
+          mappedComponent: 'MatButton',
+        },
+        {
+          type: 'button',
+          label: 'Get Started',
+          mappedComponent: 'MatRaisedButton',
+        },
+      ],
     },
     {
-      type: 'hero', label: 'Hero Section',
+      type: 'hero',
+      label: 'Hero Section',
       children: [
-        { type: 'text', label: 'Headline', placeholder: 'Build faster with AI' },
-        { type: 'text', label: 'Subheadline', placeholder: 'Describe your UI and watch it come to life in seconds' },
+        {
+          type: 'text',
+          label: 'Headline',
+          placeholder: 'Build faster with AI',
+        },
+        {
+          type: 'text',
+          label: 'Subheadline',
+          placeholder: 'Describe your UI and watch it come to life in seconds',
+        },
         {
           type: 'row',
           children: [
-            { type: 'button', label: 'Get Started Free', mappedComponent: 'MatRaisedButton' },
-            { type: 'button', label: 'See Demo', mappedComponent: 'MatStrokedButton' }
-          ]
-        }
-      ]
+            {
+              type: 'button',
+              label: 'Get Started Free',
+              mappedComponent: 'MatRaisedButton',
+            },
+            {
+              type: 'button',
+              label: 'See Demo',
+              mappedComponent: 'MatStrokedButton',
+            },
+          ],
+        },
+      ],
     },
     {
-      type: 'grid', label: 'Features Grid',
+      type: 'grid',
+      label: 'Features Grid',
       children: [
-        { type: 'card', label: 'Feature 1', title: 'Fast Generation', mappedComponent: 'MatCard' },
-        { type: 'card', label: 'Feature 2', title: 'Design System Aware', mappedComponent: 'MatCard' },
-        { type: 'card', label: 'Feature 3', title: 'Export to Angular', mappedComponent: 'MatCard' },
-      ]
+        {
+          type: 'card',
+          label: 'Feature 1',
+          title: 'Fast Generation',
+          mappedComponent: 'MatCard',
+        },
+        {
+          type: 'card',
+          label: 'Feature 2',
+          title: 'Design System Aware',
+          mappedComponent: 'MatCard',
+        },
+        {
+          type: 'card',
+          label: 'Feature 3',
+          title: 'Export to Angular',
+          mappedComponent: 'MatCard',
+        },
+      ],
     },
-    { type: 'footer', label: 'Footer', mappedComponent: 'AppFooterComponent', items: ['Privacy', 'Terms', 'Contact'] }
-  ]
+    {
+      type: 'footer',
+      label: 'Footer',
+      mappedComponent: 'AppFooterComponent',
+      items: ['Privacy', 'Terms', 'Contact'],
+    },
+  ],
 };
 
 const FORM_SCHEMA: WireframeNode = {
   type: 'column',
   children: [
     {
-      type: 'header', label: 'App Header', mappedComponent: 'MatToolbar',
+      type: 'header',
+      label: 'App Header',
+      mappedComponent: 'MatToolbar',
       children: [
         { type: 'logo', label: 'Logo', mappedComponent: 'BrandLogoComponent' },
-        { type: 'text', label: 'Registration', placeholder: '' }
-      ]
+        { type: 'text', label: 'Registration', placeholder: '' },
+      ],
     },
     {
-      type: 'main', label: 'Form Content',
+      type: 'main',
+      label: 'Form Content',
       children: [
         {
-          type: 'stepper', label: 'Multi-step Form', mappedComponent: 'MatStepper',
+          type: 'stepper',
+          label: 'Multi-step Form',
+          mappedComponent: 'MatStepper',
           children: [
             {
-              type: 'card', label: 'Step 1 — Personal Info', mappedComponent: 'MatCard',
+              type: 'card',
+              label: 'Step 1 — Personal Info',
+              mappedComponent: 'MatCard',
               children: [
                 {
-                  type: 'form', label: 'Personal Details', mappedComponent: 'ReactiveFormsModule',
+                  type: 'form',
+                  label: 'Personal Details',
+                  mappedComponent: 'ReactiveFormsModule',
                   children: [
-                    { type: 'input', label: 'First Name', placeholder: 'Enter first name', mappedComponent: 'MatFormField' },
-                    { type: 'input', label: 'Last Name', placeholder: 'Enter last name', mappedComponent: 'MatFormField' },
-                    { type: 'input', label: 'Email', placeholder: 'Enter email address', mappedComponent: 'MatFormField' },
-                    { type: 'input', label: 'Phone', placeholder: 'Enter phone number', mappedComponent: 'MatFormField' },
-                    { type: 'button', label: 'Next →', mappedComponent: 'MatRaisedButton' }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
+                    {
+                      type: 'input',
+                      label: 'First Name',
+                      placeholder: 'Enter first name',
+                      mappedComponent: 'MatFormField',
+                    },
+                    {
+                      type: 'input',
+                      label: 'Last Name',
+                      placeholder: 'Enter last name',
+                      mappedComponent: 'MatFormField',
+                    },
+                    {
+                      type: 'input',
+                      label: 'Email',
+                      placeholder: 'Enter email address',
+                      mappedComponent: 'MatFormField',
+                    },
+                    {
+                      type: 'input',
+                      label: 'Phone',
+                      placeholder: 'Enter phone number',
+                      mappedComponent: 'MatFormField',
+                    },
+                    {
+                      type: 'button',
+                      label: 'Next →',
+                      mappedComponent: 'MatRaisedButton',
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ],
 };
 
 const DEFAULT_SCHEMA: WireframeNode = {
   type: 'column',
   children: [
     {
-      type: 'header', label: 'App Header', mappedComponent: 'MatToolbar',
+      type: 'header',
+      label: 'App Header',
+      mappedComponent: 'MatToolbar',
       children: [
         { type: 'logo', label: 'Logo' },
-        { type: 'nav', items: ['Home', 'About', 'Contact'] }
-      ]
+        { type: 'nav', items: ['Home', 'About', 'Contact'] },
+      ],
     },
     {
-      type: 'main', label: 'Main Content',
+      type: 'main',
+      label: 'Main Content',
       children: [
         { type: 'text', label: 'Page Title', placeholder: 'Page Heading' },
-        { type: 'card', label: 'Content Card', mappedComponent: 'MatCard',
-          children: [{ type: 'text', placeholder: 'Main content area goes here' }]
-        }
-      ]
+        {
+          type: 'card',
+          label: 'Content Card',
+          mappedComponent: 'MatCard',
+          children: [
+            { type: 'text', placeholder: 'Main content area goes here' },
+          ],
+        },
+      ],
     },
-    { type: 'footer', label: 'Footer', items: ['Privacy', 'Terms'] }
-  ]
+    { type: 'footer', label: 'Footer', items: ['Privacy', 'Terms'] },
+  ],
 };
 
 @Injectable({ providedIn: 'root' })
 export class WireframeService {
+  private readonly httpClient = inject(HttpClient);
+
   private _schema$ = new BehaviorSubject<WireframeSchema | null>(null);
   private _code$ = new BehaviorSubject<GeneratedCode | null>(null);
   private _history$ = new BehaviorSubject<WireframeSchema[]>([]);
@@ -181,29 +348,81 @@ export class WireframeService {
   history$ = this._history$.asObservable();
   loading$ = this._loading$.asObservable();
 
+  private readonly generateCodeApiUrl =
+    'https://localhost:7120/api/ui-generation';
+
   generateWireframe(prompt: string): Observable<WireframeSchema> {
     this._loading$.next(true);
     const schema = this.mockGenerate(prompt);
     return of(schema).pipe(
       delay(1600),
-      tap(s => {
+      tap((s) => {
         this._schema$.next(s);
         this._loading$.next(false);
         const history = this._history$.getValue();
         this._history$.next([s, ...history].slice(0, 20));
-      })
+      }),
     );
   }
 
-  generateCode(schema: WireframeSchema): GeneratedCode {
+  generateCode(schema: WireframeSchema): void {
+    if (!schema?.prompt) return;
+
+    this._loading$.next(true);
+
+    this.httpClient
+      .post<CodeGenResponse>(this.generateCodeApiUrl, {
+        prompt: schema.prompt,
+      })
+      .subscribe({
+        next: (res) => {
+          const generated: GeneratedCode = {
+            html: res.html,
+            scss: res.scss,
+            ts: this.buildMinimalTs(schema),
+          };
+
+          this._code$.next(generated);
+          this._loading$.next(false);
+        },
+        error: (err) => {
+          console.error('Code generation failed', err);
+          this._loading$.next(false);
+
+          this._code$.next({
+            html: '<div class="alert alert-danger">Failed to generate UI</div>',
+            scss: '',
+            ts: '',
+          });
+        },
+      });
+  }
+
+  private buildMinimalTs(schema: WireframeSchema): string {
+    const name = schema.name.replace(/\s+/g, '');
+    const selector = schema.name.toLowerCase().replace(/\s+/g, '-');
+
+    return `import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-${selector}',
+  templateUrl: './${selector}.component.html',
+  styleUrls: ['./${selector}.component.scss']
+})
+export class ${name}Component { }
+`;
+  }
+
+  // Obsolete
+  /* generateCode(schema: WireframeSchema): GeneratedCode {
     const code: GeneratedCode = {
       html: this.buildHtml(schema.root, 0),
       ts: this.buildTs(schema),
-      scss: this.buildScss(schema)
+      scss: this.buildScss(schema),
     };
     this._code$.next(code);
     return code;
-  }
+  } */
 
   loadVersion(schema: WireframeSchema): void {
     this._schema$.next(schema);
@@ -216,15 +435,32 @@ export class WireframeService {
     let name: string;
 
     if (p.includes('dashboard') || p.includes('admin panel')) {
-      root = DASHBOARD_SCHEMA; name = 'Dashboard';
-    } else if (p.includes('login') || p.includes('sign in') || p.includes('auth')) {
-      root = LOGIN_SCHEMA; name = 'Login Page';
-    } else if (p.includes('landing') || p.includes('homepage') || p.includes('marketing')) {
-      root = LANDING_SCHEMA; name = 'Landing Page';
-    } else if (p.includes('register') || p.includes('signup') || p.includes('form')) {
-      root = FORM_SCHEMA; name = 'Registration Form';
+      root = DASHBOARD_SCHEMA;
+      name = 'Dashboard';
+    } else if (
+      p.includes('login') ||
+      p.includes('sign in') ||
+      p.includes('auth')
+    ) {
+      root = LOGIN_SCHEMA;
+      name = 'Login Page';
+    } else if (
+      p.includes('landing') ||
+      p.includes('homepage') ||
+      p.includes('marketing')
+    ) {
+      root = LANDING_SCHEMA;
+      name = 'Landing Page';
+    } else if (
+      p.includes('register') ||
+      p.includes('signup') ||
+      p.includes('form')
+    ) {
+      root = FORM_SCHEMA;
+      name = 'Registration Form';
     } else {
-      root = DEFAULT_SCHEMA; name = 'Page Layout';
+      root = DEFAULT_SCHEMA;
+      name = 'Page Layout';
     }
 
     return {
@@ -233,7 +469,7 @@ export class WireframeService {
       prompt,
       root,
       createdAt: new Date(),
-      mappings: this.extractMappings(root)
+      mappings: this.extractMappings(root),
     };
   }
 
@@ -245,7 +481,9 @@ export class WireframeService {
           blockLabel: n.label || n.type,
           blockType: n.type,
           componentName: n.mappedComponent,
-          matchConfidence: n.mappedComponent.startsWith('Mat') ? 'fallback' : 'exact'
+          matchConfidence: n.mappedComponent.startsWith('Mat')
+            ? 'fallback'
+            : 'exact',
         });
       }
       n.children?.forEach(walk);
@@ -258,7 +496,10 @@ export class WireframeService {
     const indent = '  '.repeat(depth);
     const tag = this.htmlTag(node);
     if (!tag) return '';
-    const children = (node.children || []).map(c => this.buildHtml(c, depth + 1)).filter(Boolean).join('\n');
+    const children = (node.children || [])
+      .map((c) => this.buildHtml(c, depth + 1))
+      .filter(Boolean)
+      .join('\n');
     const inner = this.htmlInner(node, depth + 1);
     const content = inner || children;
     if (!content) return `${indent}${tag.open}${tag.close}`;
@@ -268,30 +509,84 @@ export class WireframeService {
   private htmlTag(node: WireframeNode): { open: string; close: string } | null {
     const label = node.label || node.type;
     switch (node.type) {
-      case 'column':    return { open: `<div class="d-flex flex-column gap-3">`, close: `</div>` };
-      case 'row':       return { open: `<div class="d-flex flex-wrap gap-3">`, close: `</div>` };
-      case 'grid':      return { open: `<div class="row row-cols-1 row-cols-md-3 g-3">`, close: `</div>` };
-      case 'main':      return { open: `<main class="main-content flex-grow-1 p-3">`, close: `</main>` };
-      case 'header':    return { open: `<mat-toolbar color="primary" class="app-toolbar">`, close: `</mat-toolbar>` };
-      case 'sidebar':   return { open: `<mat-nav-list class="app-sidebar">`, close: `</mat-nav-list>` };
-      case 'hero':      return { open: `<section class="hero-section">`, close: `</section>` };
-      case 'footer':    return { open: `<footer class="app-footer">`, close: `</footer>` };
-      case 'card':      return { open: `<mat-card>`, close: `</mat-card>` };
-      case 'stat-card': return { open: `<mat-card class="stat-card">`, close: `</mat-card>` };
-      case 'data-table':return { open: `<table mat-table [dataSource]="dataSource" class="mat-elevation-z2 w-100">`, close: `</table>` };
-      case 'form':      return { open: `<form [formGroup]="form" (ngSubmit)="onSubmit()">`, close: `</form>` };
-      case 'tabs':      return { open: `<mat-tab-group>`, close: `</mat-tab-group>` };
-      case 'stepper':   return { open: `<mat-stepper linear>`, close: `</mat-stepper>` };
-      case 'list':      return { open: `<mat-list>`, close: `</mat-list>` };
-      case 'nav':       return { open: `<nav class="app-nav d-flex gap-2">`, close: `</nav>` };
-      case 'logo':      return { open: `<span class="brand-logo">`, close: `</span>` };
-      case 'button':    return { open: `<button mat-raised-button color="primary">`, close: `</button>` };
-      case 'icon-button': return { open: `<button mat-icon-button>`, close: `</button>` };
-      case 'text':      return { open: `<div class="text-block">`, close: `</div>` };
-      case 'image':     return { open: `<div class="image-placeholder">`, close: `</div>` };
-      case 'divider':   return { open: `<mat-divider>`, close: `</mat-divider>` };
-      case 'search':    return { open: `<mat-form-field appearance="outline" class="search-field">`, close: `</mat-form-field>` };
-      default:          return { open: `<div class="${node.type}-block">`, close: `</div>` };
+      case 'column':
+        return {
+          open: `<div class="d-flex flex-column gap-3">`,
+          close: `</div>`,
+        };
+      case 'row':
+        return {
+          open: `<div class="d-flex flex-wrap gap-3">`,
+          close: `</div>`,
+        };
+      case 'grid':
+        return {
+          open: `<div class="row row-cols-1 row-cols-md-3 g-3">`,
+          close: `</div>`,
+        };
+      case 'main':
+        return {
+          open: `<main class="main-content flex-grow-1 p-3">`,
+          close: `</main>`,
+        };
+      case 'header':
+        return {
+          open: `<mat-toolbar color="primary" class="app-toolbar">`,
+          close: `</mat-toolbar>`,
+        };
+      case 'sidebar':
+        return {
+          open: `<mat-nav-list class="app-sidebar">`,
+          close: `</mat-nav-list>`,
+        };
+      case 'hero':
+        return { open: `<section class="hero-section">`, close: `</section>` };
+      case 'footer':
+        return { open: `<footer class="app-footer">`, close: `</footer>` };
+      case 'card':
+        return { open: `<mat-card>`, close: `</mat-card>` };
+      case 'stat-card':
+        return { open: `<mat-card class="stat-card">`, close: `</mat-card>` };
+      case 'data-table':
+        return {
+          open: `<table mat-table [dataSource]="dataSource" class="mat-elevation-z2 w-100">`,
+          close: `</table>`,
+        };
+      case 'form':
+        return {
+          open: `<form [formGroup]="form" (ngSubmit)="onSubmit()">`,
+          close: `</form>`,
+        };
+      case 'tabs':
+        return { open: `<mat-tab-group>`, close: `</mat-tab-group>` };
+      case 'stepper':
+        return { open: `<mat-stepper linear>`, close: `</mat-stepper>` };
+      case 'list':
+        return { open: `<mat-list>`, close: `</mat-list>` };
+      case 'nav':
+        return { open: `<nav class="app-nav d-flex gap-2">`, close: `</nav>` };
+      case 'logo':
+        return { open: `<span class="brand-logo">`, close: `</span>` };
+      case 'button':
+        return {
+          open: `<button mat-raised-button color="primary">`,
+          close: `</button>`,
+        };
+      case 'icon-button':
+        return { open: `<button mat-icon-button>`, close: `</button>` };
+      case 'text':
+        return { open: `<div class="text-block">`, close: `</div>` };
+      case 'image':
+        return { open: `<div class="image-placeholder">`, close: `</div>` };
+      case 'divider':
+        return { open: `<mat-divider>`, close: `</mat-divider>` };
+      case 'search':
+        return {
+          open: `<mat-form-field appearance="outline" class="search-field">`,
+          close: `</mat-form-field>`,
+        };
+      default:
+        return { open: `<div class="${node.type}-block">`, close: `</div>` };
     }
   }
 
@@ -299,13 +594,19 @@ export class WireframeService {
     const indent = '  '.repeat(depth);
     switch (node.type) {
       case 'sidebar':
-        return (node.items || []).map(item =>
-          `${indent}<a mat-list-item routerLink="/${item.toLowerCase()}">${item}</a>`
-        ).join('\n');
+        return (node.items || [])
+          .map(
+            (item) =>
+              `${indent}<a mat-list-item routerLink="/${item.toLowerCase()}">${item}</a>`,
+          )
+          .join('\n');
       case 'nav':
-        return (node.items || []).map(item =>
-          `${indent}<a mat-button routerLink="/${item.toLowerCase()}">${item}</a>`
-        ).join('\n');
+        return (node.items || [])
+          .map(
+            (item) =>
+              `${indent}<a mat-button routerLink="/${item.toLowerCase()}">${item}</a>`,
+          )
+          .join('\n');
       case 'stat-card':
         return `${indent}<mat-card-header>\n${indent}  <mat-card-title>${node.label}</mat-card-title>\n${indent}</mat-card-header>\n${indent}<mat-card-content>\n${indent}  <h2 class="stat-value">{{ ${this.toCamel(node.label || 'value')} }}</h2>\n${indent}</mat-card-content>`;
       case 'logo':
@@ -315,15 +616,25 @@ export class WireframeService {
       case 'icon-button':
         return `${indent}<mat-icon>notifications</mat-icon>`;
       case 'text':
-        return node.label ? `${indent}<h3>${node.label}</h3>\n${indent}<p>${node.placeholder || ''}</p>` : `${indent}<p>${node.placeholder || 'Content'}</p>`;
+        return node.label
+          ? `${indent}<h3>${node.label}</h3>\n${indent}<p>${node.placeholder || ''}</p>`
+          : `${indent}<p>${node.placeholder || 'Content'}</p>`;
       case 'input':
         return `${indent}<mat-label>${node.label}</mat-label>\n${indent}<input matInput formControlName="${this.toCamel(node.label || 'field')}" placeholder="${node.placeholder || ''}">`;
       case 'data-table':
-        return (node.columns || ['Column']).map(col =>
-          `${indent}<ng-container matColumnDef="${this.toCamel(col)}">\n${indent}  <th mat-header-cell *matHeaderCellDef>${col}</th>\n${indent}  <td mat-cell *matCellDef="let row">{{ row.${this.toCamel(col)} }}</td>\n${indent}</ng-container>`
-        ).join('\n') + `\n${indent}<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>\n${indent}<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>`;
+        return (
+          (node.columns || ['Column'])
+            .map(
+              (col) =>
+                `${indent}<ng-container matColumnDef="${this.toCamel(col)}">\n${indent}  <th mat-header-cell *matHeaderCellDef>${col}</th>\n${indent}  <td mat-cell *matCellDef="let row">{{ row.${this.toCamel(col)} }}</td>\n${indent}</ng-container>`,
+            )
+            .join('\n') +
+          `\n${indent}<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>\n${indent}<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>`
+        );
       case 'footer':
-        return (node.items || []).map(item => `${indent}<a href="#">${item}</a>`).join('\n');
+        return (node.items || [])
+          .map((item) => `${indent}<a href="#">${item}</a>`)
+          .join('\n');
       default:
         return '';
     }
@@ -345,9 +656,13 @@ import { MatTableDataSource } from '@angular/material/table';
 export class ${name}Component implements OnInit {
   appName = '${schema.name}';
   form!: FormGroup;
-${columns.length ? `  displayedColumns: string[] = [${columns.map(c => `'${this.toCamel(c)}'`).join(', ')}];
-  dataSource = new MatTableDataSource<any>([]);` : ''}
-${stats.map(s => `  ${this.toCamel(s.label || 'value')} = '${s.value || '0'}';`).join('\n')}
+${
+  columns.length
+    ? `  displayedColumns: string[] = [${columns.map((c) => `'${this.toCamel(c)}'`).join(', ')}];
+  dataSource = new MatTableDataSource<any>([]);`
+    : ''
+}
+${stats.map((s) => `  ${this.toCamel(s.label || 'value')} = '${s.value || '0'}';`).join('\n')}
 
   constructor(private fb: FormBuilder) {}
 
@@ -447,15 +762,19 @@ ${stats.map(s => `  ${this.toCamel(s.label || 'value')} = '${s.value || '0'}';`)
 
   private findTableColumns(node: WireframeNode): string[] {
     if (node.type === 'data-table') return node.columns || [];
-    return (node.children || []).flatMap(c => this.findTableColumns(c));
+    return (node.children || []).flatMap((c) => this.findTableColumns(c));
   }
 
   private findStatCards(node: WireframeNode): WireframeNode[] {
     if (node.type === 'stat-card') return [node];
-    return (node.children || []).flatMap(c => this.findStatCards(c));
+    return (node.children || []).flatMap((c) => this.findStatCards(c));
   }
 
   private toCamel(s: string): string {
-    return s.replace(/(?:^\w|[A-Z]|\b\w)/g, (w, i) => i === 0 ? w.toLowerCase() : w.toUpperCase()).replace(/\s+/g, '');
+    return s
+      .replace(/(?:^\w|[A-Z]|\b\w)/g, (w, i) =>
+        i === 0 ? w.toLowerCase() : w.toUpperCase(),
+      )
+      .replace(/\s+/g, '');
   }
 }
