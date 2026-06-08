@@ -342,11 +342,13 @@ export class WireframeService {
   private _code$ = new BehaviorSubject<GeneratedCode | null>(null);
   private _history$ = new BehaviorSubject<WireframeSchema[]>([]);
   private _loading$ = new BehaviorSubject<boolean>(false);
+  private _error$ = new BehaviorSubject<string | null>(null);
 
   schema$ = this._schema$.asObservable();
   code$ = this._code$.asObservable();
   history$ = this._history$.asObservable();
   loading$ = this._loading$.asObservable();
+  error$ = this._error$.asObservable();
 
   private readonly generateCodeApiUrl =
     'https://localhost:7120/api/ui-generation';
@@ -388,12 +390,7 @@ export class WireframeService {
         error: (err) => {
           console.error('Code generation failed', err);
           this._loading$.next(false);
-
-          this._code$.next({
-            html: '<div class="alert alert-danger">Failed to generate UI</div>',
-            scss: '',
-            ts: '',
-          });
+          this._error$.next('Could not reach the code-generation server. Is the backend running?');
         },
       });
   }

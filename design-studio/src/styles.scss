@@ -21,3 +21,21 @@ html, body {
   font-family: 'Inter', 'Segoe UI', sans-serif !important;
   letter-spacing: 0 !important;
 }
+
+// Error snackbar shown when code-gen backend is unreachable
+.canvas-error-snack {
+  .mdc-snackbar__surface {
+    background: #1f2937 !important;
+    border-left: 4px solid #ef4444;
+  }
+  .mdc-snackbar__label {
+    color: #f9fafb !important;
+    font-size: 13px;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+  }
+  .mat-mdc-snack-bar-action {
+    color: #f87171 !important;
+    font-size: 12px;
+    font-weight: 600;
+  }
+}

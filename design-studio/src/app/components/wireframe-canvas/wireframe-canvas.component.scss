@@ -1,340 +1,482 @@
-$accent:       #0078D4;
-$border:       #EDEBE9;
-$text-primary: #323130;
-$text-dim:     #A19F9D;
-$canvas-bg:    #F3F2F1;
+// ── Tokens ─────────────────────────────────────────────────────
+$accent:      #1677ff;
+$green:       #16a34a;
+$green-bg:    rgba(22, 163, 74, 0.10);
+$border:      #e5e7eb;
+$canvas-bg:   #f0f0f0;
+$white:       #ffffff;
+$text:        #111827;
+$text-muted:  #6b7280;
+$text-dim:    #9ca3af;
 
+// ── Host ───────────────────────────────────────────────────────
 :host {
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow: hidden;
   min-height: 0;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
 }
 
+// ── Panel shell: row = left tools + canvas area ────────────────
 .canvas-panel {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   height: 100%;
   overflow: hidden;
 }
 
-// ===========================================
-// HEADER
-// ===========================================
-
-.canvas-header {
-  height: 48px;
-  padding: 0 20px;
-  border-bottom: 1px solid $border;
+// ══════════════════════════════════════════════════════════════
+// LEFT TOOL SIDEBAR
+// ══════════════════════════════════════════════════════════════
+.canvas-tools {
+  width: 48px;
   flex-shrink: 0;
-  background: #FFFFFF;
+  background: $white;
+  border-right: 1px solid $border;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  overflow: hidden;
+  padding: 8px 0;
+  gap: 2px;
+  z-index: 10;
 }
 
-.canvas-title-row {
+.ct-divider {
+  width: 28px;
+  height: 1px;
+  background: $border;
+  margin: 5px 0;
+}
+
+.ct-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: $text-muted;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+
+  mat-icon { font-size: 19px; width: 19px; height: 19px; }
+
+  &:hover { background: $green-bg; color: $green; }
+
+  &.active {
+    background: $green-bg;
+    color: $green;
+  }
+
+  &.ct-panel {
+    color: $text-dim;
+    &:hover { color: $text; background: #f3f4f6; }
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// CANVAS AREA  (relative container for floating elements)
+// ══════════════════════════════════════════════════════════════
+.canvas-area {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+// ══════════════════════════════════════════════════════════════
+// FLOATING TOPBAR  (fades in when canvas-area is hovered)
+// ══════════════════════════════════════════════════════════════
+.floating-topbar {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 40;
+
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  background: $white;
+  border: 1px solid $border;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.13);
+  padding: 5px 8px;
+  white-space: nowrap;
+
+  // Hidden by default — fade in on hover
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+// Show when canvas-area is hovered OR when topbar itself is hovered
+// (ensures dropdown stays visible while user interacts with it)
+.canvas-area:hover .floating-topbar,
+.floating-topbar:hover {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(-50%) translateY(0);
+}
+
+// ── Viewport trigger (left side) ──────────────────────────────
+.ftb-left {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.12s;
+
+  &:hover { background: #f3f4f6; }
+}
+
+.ftb-screen-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  color: $text-muted;
+}
+
+.ftb-filename {
+  font-size: 13px;
+  font-weight: 600;
+  color: $text;
+}
+
+.ftb-version {
+  font-size: 10px;
+  font-weight: 600;
+  color: $text-dim;
+  background: #f3f4f6;
+  border: 1px solid $border;
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: 'Cascadia Code', 'Courier New', monospace;
+}
+
+// ── Viewport dropdown ─────────────────────────────────────────
+.ftb-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 220px;
+  background: $white;
+  border: 1px solid $border;
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.14);
+  padding: 5px;
+  z-index: 100;
+  animation: dropdown-in 0.15s ease both;
+}
+
+@keyframes dropdown-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ftb-vp-row {
   display: flex;
   align-items: center;
   gap: 10px;
   width: 100%;
-  overflow: hidden;
+  padding: 8px 10px;
+  border: none;
+  background: transparent;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 0.12s;
+
+  &:hover { background: #f3f4f6; }
+
+  &.selected {
+    background: rgba(22, 119, 255, 0.07);
+    .ftb-vp-label { color: $accent; font-weight: 600; }
+    .ftb-vp-icon  { color: $accent; }
+  }
 }
 
-.panel-title {
+.ftb-vp-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  color: $text-muted;
+}
+
+.ftb-vp-label {
+  font-size: 13px;
+  color: $text;
+  flex: 1;
+  text-align: left;
+}
+
+.ftb-vp-dim {
+  font-size: 11px;
+  color: $text-dim;
+  font-family: 'Cascadia Code', 'Courier New', monospace;
+}
+
+// ── Separator ─────────────────────────────────────────────────
+.ftb-sep {
+  width: 1px;
+  height: 20px;
+  background: $border;
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+.ftb-sep-v {
+  width: 1px;
+  height: 18px;
+  background: $border;
+  margin: 0 2px;
+}
+
+// ── Right tool buttons ────────────────────────────────────────
+.ftb-tools {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  color: $text-primary;
-  white-space: nowrap;
-
-  mat-icon { font-size: 18px; width: 18px; height: 18px; color: $accent; }
+  gap: 1px;
 }
 
-.schema-name {
-  background: rgba(0, 120, 212, 0.08);
-  color: $accent;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 10px;
-  border-radius: 2px;
-  border: 1px solid rgba(0, 120, 212, 0.22);
-  white-space: nowrap;
-}
-
-// Figma-style maximize button
-.maximize-btn {
-  width: 26px !important;
-  height: 26px !important;
-  padding: 0 !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  color: #605E5C !important;
-  flex-shrink: 0;
-  transition: color 0.15s, background 0.15s;
-
-  ::ng-deep .mat-mdc-button-touch-target { display: none; }
-
-  mat-icon {
-    font-size: 16px;
-    width: 16px;
-    height: 16px;
-    line-height: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  &:hover {
-    color: $accent !important;
-    background: rgba(0, 120, 212, 0.08) !important;
-    border-radius: 2px;
-  }
-}
-
-// Compact toggle — inline next to title
-.viewport-toggle {
-  background: #F3F2F1 !important;
-  border-radius: 2px !important;
-  border: 1px solid #EDEBE9 !important;
-
-  ::ng-deep .mat-button-toggle {
-    color: #605E5C;
-    background: transparent;
-    border: none !important;
-
-    .mat-button-toggle-button {
-      padding: 0 8px;
-      height: 26px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    mat-icon { font-size: 14px; width: 14px; height: 14px; line-height: 14px; }
-
-    .mat-pseudo-checkbox { display: none !important; }
-    .mat-button-toggle-indicator-wrapper { display: none !important; }
-  }
-
-  ::ng-deep .mat-button-toggle-checked {
-    background: $accent !important;
-    color: white !important;
-
-    mat-icon { color: white; }
-  }
-}
-
-.history-select {
-  background: #F3F2F1;
-  border: 1px solid #EDEBE9;
-  border-radius: 2px;
-  color: #605E5C;
-  font-size: 12px;
-  padding: 3px 8px;
-  outline: none;
+.ftb-btn {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: $text-muted;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.13s, color 0.13s;
 
-  option { background: #FFFFFF; color: #323130; }
+  mat-icon { font-size: 17px; width: 17px; height: 17px; }
+
+  &:hover:not(:disabled) {
+    background: #f3f4f6;
+    color: $text;
+  }
+
+  &:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  &.ftb-figma mat-icon { color: #7c3aed; }
 }
 
-// Generate Code button
-.gen-code-btn {
-  margin-left: auto;
-  flex-shrink: 0;
+// ── Share button (top-right, always visible) ──────────────────
+.share-btn {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  z-index: 40;
+
+  background: $green !important;
+  color: $white !important;
+  border-radius: 8px !important;
+  height: 32px !important;
+  padding: 0 14px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 5px;
-  height: 30px !important;
-  line-height: 30px !important;
-  font-size: 12px;
-  font-weight: 600;
-  background-color: $accent !important;
-  color: #FFFFFF !important;
-  border-radius: 2px !important;
+  box-shadow: 0 1px 6px rgba(22, 163, 74, 0.30) !important;
+  transition: box-shadow 0.15s, opacity 0.15s !important;
 
-  mat-icon { font-size: 16px; width: 16px; height: 16px; color: #FFFFFF; }
+  mat-icon { font-size: 15px; width: 15px; height: 15px; }
 
-  &:disabled {
-    background-color: rgba(0, 120, 212, 0.35) !important;
-    color: rgba(255, 255, 255, 0.6) !important;
+  &:hover:not(:disabled) {
+    box-shadow: 0 4px 14px rgba(22, 163, 74, 0.40) !important;
   }
+  &:disabled { opacity: 0.40 !important; cursor: not-allowed; }
 }
 
-// ===========================================
-// CANVAS BODY — infinite dot-grid panning surface
-// ===========================================
-
+// ══════════════════════════════════════════════════════════════
+// CANVAS BODY  (dot-grid panning surface)
+// ══════════════════════════════════════════════════════════════
 .canvas-body {
   flex: 1;
-  min-height: 0;
   position: relative;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  // dot-grid background
   background-color: $canvas-bg;
-  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.18) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(0,0,0,0.14) 1px, transparent 1px);
   background-size: 20px 20px;
 
-  // default cursor
   cursor: default;
-
-  &.tool-hand    { cursor: grab; }
-  &.is-dragging  { cursor: grabbing; }
+  &.tool-hand   { cursor: grab; }
+  &.is-dragging { cursor: grabbing; }
 }
 
-// ===========================================
-// PLACEHOLDER
-// ===========================================
+// ── Frame wrapper ─────────────────────────────────────────────
+.canvas-frame-wrapper {
+  position: relative;
+  transform-origin: top center;
+  will-change: transform;
+}
 
+// ── Selection ring ────────────────────────────────────────────
+.selection-ring {
+  position: absolute;
+  inset: -2px;
+  border: 2px solid $accent;
+  border-radius: 1px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.handle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: $white;
+  border: 2px solid $accent;
+  border-radius: 1px;
+
+  &.tl { top: -5px;    left: -5px;              cursor: nwse-resize; }
+  &.tm { top: -5px;    left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+  &.tr { top: -5px;    right: -5px;             cursor: nesw-resize; }
+  &.ml { top: 50%;     left: -5px;  transform: translateY(-50%); cursor: ew-resize; }
+  &.mr { top: 50%;     right: -5px; transform: translateY(-50%); cursor: ew-resize; }
+  &.bl { bottom: -5px; left: -5px;              cursor: nesw-resize; }
+  &.bm { bottom: -5px; left: 50%; transform: translateX(-50%); cursor: ns-resize; }
+  &.br { bottom: -5px; right: -5px;             cursor: nwse-resize; }
+}
+
+// ── Dimension pill ────────────────────────────────────────────
+.dim-pill {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: $accent;
+  color: $white;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'Cascadia Code', 'Courier New', monospace;
+  padding: 3px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+  pointer-events: none;
+  letter-spacing: 0.3px;
+}
+
+// ── Viewport content ──────────────────────────────────────────
+.canvas-viewport {
+  background: $white;
+  overflow: hidden;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.10),
+    0 8px 32px rgba(0, 0, 0, 0.08);
+  min-width: 320px;
+  min-height: 300px;
+  transition: max-width 0.3s ease;
+}
+
+.real-preview { min-height: 300px; }
+
+// ══════════════════════════════════════════════════════════════
+// PLACEHOLDER
+// ══════════════════════════════════════════════════════════════
 .canvas-placeholder {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 14px;
   color: $text-dim;
   text-align: center;
-  padding: 40px;
+  padding: 48px;
+  pointer-events: none;
 
   p { margin: 0; font-size: 14px; }
   .hint { font-size: 12px; opacity: 0.7; }
 
   .empty-icon {
-    font-size: 48px;
-    width: 48px;
-    height: 48px;
-    opacity: 0.25;
-    color: $text-dim;
+    font-size: 52px; width: 52px; height: 52px;
+    opacity: 0.18;
   }
 
   &.loading .loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid #EDEBE9;
+    width: 38px; height: 38px;
+    border: 3px solid $border;
     border-top-color: $accent;
     border-radius: 50%;
-    animation: spin 0.8s linear infinite;
+    animation: spin 0.75s linear infinite;
   }
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
+@keyframes spin { to { transform: rotate(360deg); } }
 
-// ===========================================
-// CANVAS VIEWPORT — the draggable white frame
-// ===========================================
-
-.canvas-viewport {
-  background: white;
-  border-radius: 2px;
-  overflow: hidden;
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.10),
-    0 8px 32px rgba(0, 0, 0, 0.08);
-  flex-shrink: 0;
-  transition: max-width 0.3s ease;
-  will-change: transform;
-  // transform comes from [style.transform] binding — no CSS transition so drag feels instant
-}
-
-// ===========================================
-// FLOATING TOOL PALETTE
-// ===========================================
-
-.floating-toolbar {
+// ══════════════════════════════════════════════════════════════
+// ZOOM BAR  (bottom-right)
+// ══════════════════════════════════════════════════════════════
+.zoom-bar {
   position: absolute;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 16px;
+  right: 16px;
   display: flex;
   align-items: center;
-  gap: 2px;
-  padding: 5px 6px;
-  background: #FFFFFF;
+  gap: 0;
+  background: $white;
   border: 1px solid $border;
-  border-radius: 10px;
-  box-shadow:
-    0 4px 16px rgba(0, 0, 0, 0.14),
-    0 1px 4px rgba(0, 0, 0, 0.10);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.10);
+  overflow: hidden;
   z-index: 20;
-  // spring-in animation on appear
-  animation: toolbar-pop 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
-@keyframes toolbar-pop {
-  from { opacity: 0; transform: translateX(-50%) scale(0.85); }
-  to   { opacity: 1; transform: translateX(-50%) scale(1); }
-}
-
-.tool-sep {
-  width: 1px;
-  height: 20px;
-  background: $border;
-  margin: 0 2px;
-  flex-shrink: 0;
-}
-
-.tool-btn {
+.zoom-btn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: $text-muted;
+  font-size: 17px;
+  font-weight: 300;
+  cursor: pointer;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  width: 40px;
-  height: 44px;
-  border: none;
-  border-radius: 7px;
-  background: transparent;
-  color: #605E5C;
-  cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
-  padding: 0;
+  transition: background 0.12s, color 0.12s;
+  line-height: 1;
 
-  mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    line-height: 18px;
-  }
-
-  &:hover {
-    background: rgba(0, 120, 212, 0.07);
-    color: $accent;
-  }
-
-  &:active { transform: scale(0.92); }
-
-  &.active {
-    background: rgba(0, 120, 212, 0.12);
-    color: $accent;
-
-    .tool-key {
-      background: $accent;
-      color: #FFFFFF;
-      border-color: $accent;
-    }
-  }
+  &:hover:not(:disabled) { background: #f3f4f6; color: $text; }
+  &:disabled { opacity: 0.30; cursor: not-allowed; }
 }
 
-.tool-key {
-  font-size: 9px;
-  font-weight: 700;
+.zoom-pct {
+  min-width: 56px;
+  height: 28px;
+  border: none;
+  border-left: 1px solid $border;
+  border-right: 1px solid $border;
+  background: transparent;
+  color: $text;
+  font-size: 11px;
+  font-weight: 600;
   font-family: 'Cascadia Code', 'Courier New', monospace;
-  line-height: 1;
-  padding: 1px 4px;
-  border-radius: 3px;
-  border: 1px solid #C8C6C4;
-  background: #F3F2F1;
-  color: #605E5C;
-  letter-spacing: 0.3px;
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  cursor: pointer;
+  padding: 0 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s;
+  letter-spacing: 0.2px;
+
+  &:hover { background: #f3f4f6; }
 }
