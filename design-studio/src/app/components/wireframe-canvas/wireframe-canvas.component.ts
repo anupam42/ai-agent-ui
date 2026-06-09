@@ -45,7 +45,9 @@ interface ViewportOption {
 })
 export class WireframeCanvasComponent implements OnInit, AfterViewInit, AfterViewChecked, OnDestroy {
   @Input() isMaximized = false;
+  @Input() isDark = false;
   @Output() toggleMaximize = new EventEmitter<void>();
+  @Output() toggleTheme = new EventEmitter<void>();
 
   @ViewChild('previewFrame') private previewFrame?: ElementRef<HTMLIFrameElement>;
   @ViewChild('canvasBody') private canvasBodyRef?: ElementRef<HTMLDivElement>;
@@ -125,7 +127,10 @@ export class WireframeCanvasComponent implements OnInit, AfterViewInit, AfterVie
       this.resizeH = null;
       setTimeout(() => this.fitToCanvas());
     });
-    this.wireframeService.loading$.subscribe((l) => (this.loading = l));
+    this.wireframeService.loading$.subscribe((l) => {
+      this.loading = l;
+      if (l) setTimeout(() => this.fitToCanvas());
+    });
     this.wireframeService.history$.subscribe((h) => (this.history = h));
     this.wireframeService.code$.subscribe((c) => {
       this.code = c ?? { html: '', ts: '', scss: '' };

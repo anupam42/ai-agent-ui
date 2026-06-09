@@ -54,7 +54,7 @@
   <!-- ─── Canvas area ─── -->
   <div class="canvas-area">
 
-    <!-- Floating topbar (fades in on hover) -->
+    <!-- Floating topbar — always visible -->
     <div class="floating-topbar">
 
       <!-- Left: viewport selector + filename -->
@@ -105,14 +105,18 @@
 
     </div>
 
-    <!-- Share button — always visible, top-right -->
-    <button mat-flat-button class="share-btn"
-      [disabled]="!schema || loading"
-      (click)="generateCode()"
-      matTooltip="Generate Angular component">
-      <mat-icon>upload</mat-icon>
-      Share
-    </button>
+    <!-- Top-right canvas actions: theme toggle + Share -->
+    <div class="canvas-actions">
+      <button class="ca-icon-btn" (click)="toggleTheme.emit()"
+        [matTooltip]="isDark ? 'Light mode' : 'Dark mode'">
+        <mat-icon>{{ isDark ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+      <button class="ca-share-btn" (click)="generateCode()"
+        [disabled]="!schema || loading">
+        <mat-icon>upload</mat-icon>
+        Share
+      </button>
+    </div>
 
     <!-- ─── Canvas body ─── -->
     <div #canvasBody class="canvas-body"
@@ -124,18 +128,17 @@
       (mouseleave)="onCanvasMouseLeave()"
       (mouseenter)="onCanvasMouseEnter()">
 
-      @if (loading) {
-        <div class="canvas-placeholder loading">
-          <div class="loading-spinner"></div>
-          <p>Generating wireframe…</p>
-        </div>
-      } @else if (!schema) {
+      @if (!loading && !schema) {
+        <!-- Empty state — no frame yet -->
         <div class="canvas-placeholder empty">
-          <mat-icon class="empty-icon">draw</mat-icon>
-          <p>Your wireframe will appear here.</p>
-          <p class="hint">Type a description in the prompt panel to get started.</p>
+          <div class="empty-icon-box">
+            <mat-icon>web_asset</mat-icon>
+          </div>
+          <p class="empty-title">Your wireframe appears here</p>
+          <p class="empty-hint">Describe a screen in the prompt panel, or pick an example to watch it build in real time.</p>
         </div>
       } @else {
+        <!-- Frame always visible while loading OR when schema exists -->
         <div class="canvas-frame-wrapper"
           [style.transform]="'translate(' + offsetX + 'px,' + offsetY + 'px) scale(' + zoom + ')'">
 
@@ -153,10 +156,23 @@
 
           <!-- Viewport content -->
           <div class="canvas-viewport" [style.width]="frameWidth" [style.height]="frameHeight">
-            @if (code.html) {
+            @if (loading) {
+              <!-- In-frame loading state -->
+              <div class="canvas-loading-inner">
+                <div class="cli-icon-box">
+                  <mat-icon>space_dashboard</mat-icon>
+                </div>
+                <div class="cli-status">
+                  <span class="cli-dot"></span>
+                  <span class="cli-dot"></span>
+                  <span class="cli-dot"></span>
+                  <p class="cli-label">Sketching your wireframe…</p>
+                </div>
+              </div>
+            } @else if (code.html) {
               <iframe #previewFrame class="real-preview" frameborder="0"></iframe>
             } @else {
-              <app-wireframe-block [node]="schema.root" [depth]="0" />
+              <app-wireframe-block [node]="schema!.root" [depth]="0" />
             }
           </div>
 

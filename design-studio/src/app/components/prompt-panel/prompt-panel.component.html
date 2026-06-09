@@ -77,25 +77,27 @@
     }
   </div>
 
-  <!-- EXAMPLES (2×2 grid) -->
+  <!-- EXAMPLES (single-column list) -->
   @if (showExamples) {
     <div class="example-section">
       <div class="examples-header">
-        <mat-icon>tips_and_updates</mat-icon>
+        <mat-icon>bolt</mat-icon>
         <span>Try an example</span>
       </div>
-      <div class="example-grid">
+      <div class="example-list">
         @for (ex of examples; track ex.text) {
           <button
             class="example-card"
             (click)="send(ex.text)"
             [disabled]="loading"
           >
-            <div class="card-top">
-              <mat-icon class="card-icon">{{ ex.icon }}</mat-icon>
-              <span class="card-tag">{{ ex.tag }}</span>
+            <div class="card-icon-box">
+              <mat-icon>{{ ex.icon }}</mat-icon>
             </div>
-            <span class="card-text">{{ ex.text }}</span>
+            <div class="card-body">
+              <span class="card-tag">{{ ex.tag }}</span>
+              <span class="card-text">{{ ex.text }}</span>
+            </div>
           </button>
         }
       </div>
@@ -110,7 +112,7 @@
         [(ngModel)]="input"
         (keydown)="onKeydown($event)"
         (input)="autoResize($event)"
-        placeholder="What would you like to build?"
+        placeholder="Describe a screen to build..."
         rows="1"
         [disabled]="loading"
         maxlength="2000"

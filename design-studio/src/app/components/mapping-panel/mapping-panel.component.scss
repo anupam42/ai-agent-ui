@@ -1,36 +1,36 @@
-$accent:         #0078D4;
-$border:         #EDEBE9;
-$text-primary:   #323130;
-$text-secondary: #605E5C;
-$text-dim:       #A19F9D;
+$accent:         var(--accent);
+$border:         var(--border);
+$text-primary:   var(--text-1);
+$text-secondary: var(--text-2);
+$text-dim:       var(--text-3);
 
 .mapping-panel {
-  padding: 12px 16px;
+  padding: 12px 16px 14px;
   border-top: 1px solid $border;
-  background: #FFFFFF;
+  background: var(--panel-bg);
 }
 
 .mapping-header {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: $text-secondary;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 10px;
 
-  mat-icon { font-size: 16px; width: 16px; height: 16px; color: $accent; }
+  mat-icon { font-size: 15px; width: 15px; height: 15px; color: $accent; }
 }
 
 .count-badge {
-  background: rgba(0, 120, 212, 0.10);
+  background: var(--accent-dim);
   color: $accent;
   font-size: 10px;
   font-weight: 700;
   padding: 1px 7px;
-  border-radius: 2px;
+  border-radius: 4px;
 }
 
 .mapping-legend {
@@ -50,7 +50,7 @@ $text-dim:       #A19F9D;
 }
 
 .mapping-empty {
-  p { font-size: 12px; color: $text-dim; margin: 0; }
+  p { font-size: 12px; color: $text-dim; margin: 0; line-height: 1.55; }
 }
 
 .mapping-list {
@@ -61,7 +61,7 @@ $text-dim:       #A19F9D;
   overflow-y: auto;
 
   &::-webkit-scrollbar { width: 3px; }
-  &::-webkit-scrollbar-thumb { background: #EDEBE9; border-radius: 2px; }
+  &::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 2px; }
 }
 
 .mapping-row {
@@ -69,9 +69,9 @@ $text-dim:       #A19F9D;
   align-items: center;
   gap: 8px;
   padding: 6px 10px;
-  background: #F3F2F1;
+  background: var(--surface-1);
   border: 1px solid $border;
-  border-radius: 2px;
+  border-radius: 4px;
 
   .confidence-icon {
     font-size: 14px;
@@ -105,6 +105,6 @@ $text-dim:       #A19F9D;
   text-overflow: ellipsis;
 }
 
-.icon-exact   { color: #107C10; }
-.icon-partial { color: #FFC83D; }
-.icon-fallback { color: $text-dim; }
+.icon-exact    { color: #16A34A; }
+.icon-partial  { color: #F59E0B; }
+.icon-fallback { color: var(--text-3); }

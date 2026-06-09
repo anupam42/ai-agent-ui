@@ -1,13 +1,22 @@
 <div class="nlw-app">
 
-  <header class="nlw-toolbar">
-    <div class="toolbar-brand">
-      <img src="assets/ai-avatar-toolbar.svg" class="brand-icon" alt="" />
-      <span class="brand-name">NLW</span>
-      <span class="brand-tagline">Natural Language → Wireframe → Code</span>
+  <!-- ─── App header ─── -->
+  <header class="app-header">
+    <div class="ah-left">
+      <div class="ah-logo">NLW</div>
+      <nav class="ah-breadcrumb">
+        <span>Natural Language</span>
+        <mat-icon class="ah-sep">chevron_right</mat-icon>
+        <span>Wireframe</span>
+        <mat-icon class="ah-sep">chevron_right</mat-icon>
+        <span class="ah-active">Code</span>
+      </nav>
     </div>
-    <div class="toolbar-actions">
-      <span class="version-badge">v{{ version }}</span>
+    <div class="ah-right">
+      <button class="ah-icon-btn" matTooltip="History">
+        <mat-icon>history</mat-icon>
+      </button>
+      <span class="ah-version">v{{ version }}</span>
     </div>
   </header>
 
@@ -30,7 +39,9 @@
     <div class="panel panel-canvas">
       <app-wireframe-canvas
         [isMaximized]="isMaximized"
-        (toggleMaximize)="toggleMaximize()" />
+        [isDark]="isDark"
+        (toggleMaximize)="toggleMaximize()"
+        (toggleTheme)="toggleTheme()" />
     </div>
 
     <!-- Code panel -->
@@ -48,5 +59,4 @@
     </div>
 
   </div>
-
 </div>

@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { NgClass } from '@angular/common';
+import { Component, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -13,7 +13,6 @@ import { MappingPanelComponent } from './components/mapping-panel/mapping-panel.
   selector: 'app-root',
   standalone: true,
   imports: [
-    NgClass,
     MatIconModule, MatButtonModule, MatTooltipModule, MatRippleModule,
     PromptPanelComponent, WireframeCanvasComponent,
     CodePreviewComponent, MappingPanelComponent,
@@ -22,10 +21,21 @@ import { MappingPanelComponent } from './components/mapping-panel/mapping-panel.
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  readonly version = '0.1.0';
+  readonly version = '0.1.8';
   isMaximized = false;
+  isDark = false;
+
+  constructor(@Inject(DOCUMENT) private document: Document) {}
 
   toggleMaximize(): void {
     this.isMaximized = !this.isMaximized;
+  }
+
+  toggleTheme(): void {
+    this.isDark = !this.isDark;
+    this.document.documentElement.setAttribute(
+      'data-theme',
+      this.isDark ? 'dark' : 'light'
+    );
   }
 }

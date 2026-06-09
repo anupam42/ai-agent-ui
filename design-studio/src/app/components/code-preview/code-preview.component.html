@@ -1,9 +1,12 @@
 <div class="code-panel">
   <div class="panel-header">
-    <span class="panel-title">
-      <mat-icon>code</mat-icon>
-      Generated Code
-    </span>
+    <div class="panel-title">
+      <div class="title-icon"><mat-icon>code</mat-icon></div>
+      <div class="title-text">
+        <span class="title-main">Generated Code</span>
+        <span class="title-sub">Angular component output</span>
+      </div>
+    </div>
     @if (code) {
       <button mat-stroked-button class="download-all-btn" (click)="downloadAll()" matTooltip="Download all files">
         <mat-icon>download</mat-icon>
@@ -14,8 +17,11 @@
 
   @if (!code) {
     <div class="code-placeholder">
-      <mat-icon class="empty-icon">integration_instructions</mat-icon>
-      <p>Click <strong>Generate Code</strong> in the canvas panel to produce Angular component code.</p>
+      <div class="empty-icon-wrap">
+        <mat-icon class="empty-icon">data_object</mat-icon>
+      </div>
+      <p class="empty-title">No code yet</p>
+      <p class="empty-desc">Generate a wireframe first, then produce its Angular code</p>
     </div>
   } @else {
     <mat-tab-group class="code-tabs" animationDuration="150ms">

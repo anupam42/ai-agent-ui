@@ -8,6 +8,63 @@ html, body {
   overflow: hidden;
 }
 
+// ── Global theme tokens ────────────────────────────────────────────────────────
+:root {
+  --accent:        #6366F1;
+  --accent-dim:    rgba(99, 102, 241, 0.10);
+  --accent-hover:  rgba(99, 102, 241, 0.15);
+
+  --surface-0:     #FFFFFF;
+  --surface-1:     #F9FAFB;
+  --surface-2:     #F3F4F6;
+  --surface-3:     #D1D5DB;
+
+  --border:        #E5E7EB;
+  --border-hover:  #9CA3AF;
+
+  --text-1:        #111827;
+  --text-2:        #6B7280;
+  --text-3:        #9CA3AF;
+
+  --toolbar-bg:       #FFFFFF;
+  --toolbar-border:   #E5E7EB;
+  --toolbar-fg:       #111827;
+  --toolbar-fg-muted: #6B7280;
+  --toolbar-fg-dim:   #9CA3AF;
+
+  --panel-bg:      #FFFFFF;
+  --canvas-bg:     #F4F4F5;
+  --app-bg:        #E3E3EA;
+}
+
+[data-theme="dark"] {
+  --accent:        #818CF8;
+  --accent-dim:    rgba(129, 140, 248, 0.12);
+  --accent-hover:  rgba(129, 140, 248, 0.18);
+
+  --surface-0:     #18181B;
+  --surface-1:     #27272A;
+  --surface-2:     #3F3F46;
+  --surface-3:     #52525B;
+
+  --border:        #3F3F46;
+  --border-hover:  #52525B;
+
+  --text-1:        #F4F4F5;
+  --text-2:        #A1A1AA;
+  --text-3:        #71717A;
+
+  --toolbar-bg:       #09090B;
+  --toolbar-border:   #27272A;
+  --toolbar-fg:       #F4F4F5;
+  --toolbar-fg-muted: #A1A1AA;
+  --toolbar-fg-dim:   #52525B;
+
+  --panel-bg:      #18181B;
+  --canvas-bg:     #09090B;
+  --app-bg:        #000000;
+}
+
 // Material icon font
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
