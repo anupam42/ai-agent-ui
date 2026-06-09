@@ -15,7 +15,7 @@ $text-dim:    var(--text-3);
   height: 100%;
   overflow: visible;
   min-height: 0;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
+  font-family: var(--font-ui);
 }
 
 // ── Panel shell: row = left tools card + canvas area card ──────
@@ -170,7 +170,7 @@ $text-dim:    var(--text-3);
   border: 1px solid $border;
   border-radius: 4px;
   padding: 1px 5px;
-  font-family: 'Cascadia Code', 'Courier New', monospace;
+  font-family: var(--font-mono);
 }
 
 // ── Viewport dropdown ─────────────────────────────────────────
@@ -231,7 +231,7 @@ $text-dim:    var(--text-3);
 .ftb-vp-dim {
   font-size: 11px;
   color: $text-dim;
-  font-family: 'Cascadia Code', 'Courier New', monospace;
+  font-family: var(--font-mono);
 }
 
 // ── Separator ─────────────────────────────────────────────────
@@ -409,7 +409,7 @@ $text-dim:    var(--text-3);
   color: $white;
   font-size: 11px;
   font-weight: 600;
-  font-family: 'Cascadia Code', 'Courier New', monospace;
+  font-family: var(--font-mono);
   padding: 3px 10px;
   border-radius: 20px;
   white-space: nowrap;
@@ -598,7 +598,7 @@ $text-dim:    var(--text-3);
   color: $text;
   font-size: 11px;
   font-weight: 600;
-  font-family: 'Cascadia Code', 'Courier New', monospace;
+  font-family: var(--font-mono);
   cursor: pointer;
   padding: 0 6px;
   display: flex;

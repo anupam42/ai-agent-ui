@@ -5,7 +5,7 @@ $wf-accent: #0078D4;
 
 .wf-block {
   position: relative;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
+  font-family: var(--font-ui);
   font-size: 13px;
   box-sizing: border-box;
 }

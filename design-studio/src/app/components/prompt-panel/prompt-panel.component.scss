@@ -170,7 +170,7 @@ $radius:       16px;
       background: $surface-2;
       padding: 1px 5px;
       border-radius: 4px;
-      font-family: 'Cascadia Code', 'Fira Code', monospace;
+      font-family: var(--font-mono);
       font-size: 11.5px;
       color: $text-1;
     }

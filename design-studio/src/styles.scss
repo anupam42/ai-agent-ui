@@ -4,7 +4,7 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
+  font-family: var(--font-ui);
   overflow: hidden;
 }
 
@@ -35,6 +35,10 @@ html, body {
   --panel-bg:      #FFFFFF;
   --canvas-bg:     #F4F4F5;
   --app-bg:        #E3E3EA;
+
+  --font-ui:       'Manrope', system-ui, sans-serif;
+  --font-display:  'Space Grotesk', 'Manrope', sans-serif;
+  --font-mono:     'JetBrains Mono', ui-monospace, monospace;
 }
 
 [data-theme="dark"] {
@@ -65,17 +69,17 @@ html, body {
   --app-bg:        #000000;
 }
 
-// Material icon font
+// Fonts
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap');
 
-// Force Inter on all Material components (overrides Roboto default)
+// Force Manrope on all Material components (overrides Roboto default)
 .mat-mdc-button, .mat-mdc-icon-button, .mat-mdc-raised-button, .mat-mdc-stroked-button,
 .mat-mdc-tab, .mdc-tab, .mdc-tab__text-label,
 .mat-mdc-tab-header, .mat-button-toggle,
 .mat-mdc-select, .mat-mdc-option,
 .mat-mdc-tooltip, .mdc-tooltip__surface {
-  font-family: 'Inter', 'Segoe UI', sans-serif !important;
+  font-family: var(--font-ui) !important;
   letter-spacing: 0 !important;
 }
 
@@ -88,7 +92,7 @@ html, body {
   .mdc-snackbar__label {
     color: #f9fafb !important;
     font-size: 13px;
-    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-family: var(--font-ui);
   }
   .mat-mdc-snack-bar-action {
     color: #f87171 !important;

@@ -91,7 +91,10 @@
           matTooltip="Generate code" matTooltipPosition="below">
           <mat-icon>code</mat-icon>
         </button>
-        <button class="ftb-btn" matTooltip="Preview" matTooltipPosition="below">
+        <button class="ftb-btn" (click)="previewInNewTab()"
+          [disabled]="!code.html"
+          [matTooltip]="code.html ? 'Open preview in new tab' : 'Generate code first to preview'"
+          matTooltipPosition="below">
           <mat-icon>language</mat-icon>
         </button>
         <div class="ftb-sep-v"></div>

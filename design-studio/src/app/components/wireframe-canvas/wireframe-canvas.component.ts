@@ -203,6 +203,14 @@ export class WireframeCanvasComponent implements OnInit, AfterViewInit, AfterVie
     if (this.schema) this.wireframeService.generateCode(this.schema);
   }
 
+  previewInNewTab(): void {
+    if (!this.code.html) return;
+    const blob = new Blob([this.buildPreviewDoc()], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const win = window.open(url, '_blank');
+    if (win) win.addEventListener('load', () => URL.revokeObjectURL(url));
+  }
+
   loadVersion(schema: WireframeSchema): void {
     this.wireframeService.loadVersion(schema);
   }
