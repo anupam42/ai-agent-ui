@@ -39,6 +39,7 @@ html, body {
   --font-ui:       'Manrope', system-ui, sans-serif;
   --font-display:  'Space Grotesk', 'Manrope', sans-serif;
   --font-mono:     'JetBrains Mono', ui-monospace, monospace;
+
 }
 
 [data-theme="dark"] {
@@ -67,6 +68,7 @@ html, body {
   --panel-bg:      #18181B;
   --canvas-bg:     #09090B;
   --app-bg:        #000000;
+
 }
 
 // Fonts
@@ -83,7 +85,7 @@ html, body {
   letter-spacing: 0 !important;
 }
 
-// Error snackbar shown when code-gen backend is unreachable
+// ── Error snackbar shown when code-gen backend is unreachable ─────────────────
 .canvas-error-snack {
   .mdc-snackbar__surface {
     background: #1f2937 !important;

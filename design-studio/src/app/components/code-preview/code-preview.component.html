@@ -31,18 +31,27 @@
           <mat-icon class="tab-icon">html</mat-icon>
           component.html
         </ng-template>
-        <div class="code-block-wrapper">
-          <div class="code-actions">
+        <div class="editor-wrapper">
+          <div class="editor-actions">
+            <button mat-icon-button matTooltip="Format" [disabled]="formatting"
+              (click)="formatTab('angular', 'html')">
+              <mat-icon>auto_fix_high</mat-icon>
+            </button>
             <button mat-icon-button
               [matTooltip]="copiedTab === 'html' ? 'Copied!' : 'Copy'"
-              (click)="copy(code.html, 'html')">
+              (click)="copy(htmlValue, 'html')">
               <mat-icon>{{ copiedTab === 'html' ? 'check' : 'content_copy' }}</mat-icon>
             </button>
-            <button mat-icon-button matTooltip="Download" (click)="download(code.html, 'component.html')">
+            <button mat-icon-button matTooltip="Download" (click)="download(htmlValue, 'component.html')">
               <mat-icon>download</mat-icon>
             </button>
           </div>
-          <pre class="code-block lang-html"><code>{{ code.html }}</code></pre>
+          <app-code-editor
+            [value]="htmlValue"
+            language="html"
+            [isDark]="isDark"
+            (valueChange)="htmlValue = $event">
+          </app-code-editor>
         </div>
       </mat-tab>
 
@@ -51,18 +60,27 @@
           <mat-icon class="tab-icon">javascript</mat-icon>
           component.ts
         </ng-template>
-        <div class="code-block-wrapper">
-          <div class="code-actions">
+        <div class="editor-wrapper">
+          <div class="editor-actions">
+            <button mat-icon-button matTooltip="Format" [disabled]="formatting"
+              (click)="formatTab('typescript', 'ts')">
+              <mat-icon>auto_fix_high</mat-icon>
+            </button>
             <button mat-icon-button
               [matTooltip]="copiedTab === 'ts' ? 'Copied!' : 'Copy'"
-              (click)="copy(code.ts, 'ts')">
+              (click)="copy(tsValue, 'ts')">
               <mat-icon>{{ copiedTab === 'ts' ? 'check' : 'content_copy' }}</mat-icon>
             </button>
-            <button mat-icon-button matTooltip="Download" (click)="download(code.ts, 'component.ts')">
+            <button mat-icon-button matTooltip="Download" (click)="download(tsValue, 'component.ts')">
               <mat-icon>download</mat-icon>
             </button>
           </div>
-          <pre class="code-block lang-ts"><code>{{ code.ts }}</code></pre>
+          <app-code-editor
+            [value]="tsValue"
+            language="typescript"
+            [isDark]="isDark"
+            (valueChange)="tsValue = $event">
+          </app-code-editor>
         </div>
       </mat-tab>
 
@@ -71,18 +89,27 @@
           <mat-icon class="tab-icon">style</mat-icon>
           component.scss
         </ng-template>
-        <div class="code-block-wrapper">
-          <div class="code-actions">
+        <div class="editor-wrapper">
+          <div class="editor-actions">
+            <button mat-icon-button matTooltip="Format" [disabled]="formatting"
+              (click)="formatTab('scss', 'scss')">
+              <mat-icon>auto_fix_high</mat-icon>
+            </button>
             <button mat-icon-button
               [matTooltip]="copiedTab === 'scss' ? 'Copied!' : 'Copy'"
-              (click)="copy(code.scss, 'scss')">
+              (click)="copy(scssValue, 'scss')">
               <mat-icon>{{ copiedTab === 'scss' ? 'check' : 'content_copy' }}</mat-icon>
             </button>
-            <button mat-icon-button matTooltip="Download" (click)="download(code.scss, 'component.scss')">
+            <button mat-icon-button matTooltip="Download" (click)="download(scssValue, 'component.scss')">
               <mat-icon>download</mat-icon>
             </button>
           </div>
-          <pre class="code-block lang-scss"><code>{{ code.scss }}</code></pre>
+          <app-code-editor
+            [value]="scssValue"
+            language="scss"
+            [isDark]="isDark"
+            (valueChange)="scssValue = $event">
+          </app-code-editor>
         </div>
       </mat-tab>
 
