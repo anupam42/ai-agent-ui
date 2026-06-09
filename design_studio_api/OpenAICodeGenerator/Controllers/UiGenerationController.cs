@@ -10,7 +10,7 @@ namespace OpenAICodeGenerator.Controllers;
 [Route("api/ui-generation")]
 public class UiGenerationController(IOpenAiService openAiService) : ControllerBase
 {
-    public JsonSerializerOptions JsonSerializerOptions => new()
+    public static JsonSerializerOptions JsonSerializerOptions => new()
     {
         PropertyNameCaseInsensitive = true
     };
