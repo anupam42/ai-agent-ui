@@ -115,14 +115,14 @@
     </button>
 
     <!-- ─── Canvas body ─── -->
-    <div class="canvas-body"
+    <div #canvasBody class="canvas-body"
       [class.tool-hand]="tool === 'hand'"
       [class.is-dragging]="isDragging"
       (mousedown)="onCanvasMouseDown($event)"
       (mousemove)="onCanvasMouseMove($event)"
       (mouseup)="onCanvasMouseUp()"
-      (mouseleave)="onCanvasMouseUp()"
-      (wheel)="onCanvasWheel($event)">
+      (mouseleave)="onCanvasMouseLeave()"
+      (mouseenter)="onCanvasMouseEnter()">
 
       @if (loading) {
         <div class="canvas-placeholder loading">
@@ -141,20 +141,20 @@
 
           <!-- Selection ring + handles -->
           <div class="selection-ring">
-            <div class="handle tl"></div>
-            <div class="handle tm"></div>
-            <div class="handle tr"></div>
-            <div class="handle ml"></div>
-            <div class="handle mr"></div>
-            <div class="handle bl"></div>
-            <div class="handle bm"></div>
-            <div class="handle br"></div>
+            <div class="handle tl" (mousedown)="onHandleMouseDown($event, 'tl')"></div>
+            <div class="handle tm" (mousedown)="onHandleMouseDown($event, 'tm')"></div>
+            <div class="handle tr" (mousedown)="onHandleMouseDown($event, 'tr')"></div>
+            <div class="handle ml" (mousedown)="onHandleMouseDown($event, 'ml')"></div>
+            <div class="handle mr" (mousedown)="onHandleMouseDown($event, 'mr')"></div>
+            <div class="handle bl" (mousedown)="onHandleMouseDown($event, 'bl')"></div>
+            <div class="handle bm" (mousedown)="onHandleMouseDown($event, 'bm')"></div>
+            <div class="handle br" (mousedown)="onHandleMouseDown($event, 'br')"></div>
           </div>
 
           <!-- Viewport content -->
-          <div class="canvas-viewport" [style.max-width]="canvasWidth">
+          <div class="canvas-viewport" [style.width]="frameWidth" [style.height]="frameHeight">
             @if (code.html) {
-              <div class="real-preview" [innerHTML]="safeHtml(code.html)"></div>
+              <iframe #previewFrame class="real-preview" frameborder="0"></iframe>
             } @else {
               <app-wireframe-block [node]="schema.root" [depth]="0" />
             }

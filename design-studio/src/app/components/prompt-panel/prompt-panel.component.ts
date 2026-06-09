@@ -101,7 +101,7 @@ export class PromptPanelComponent implements OnInit, AfterViewChecked {
             this.messages[idx] = {
               id: loadingId,
               role: 'assistant',
-              content: `Your **${schema.name}** wireframe is on the canvas. Hit **Generate Code →** to get the Angular components.`,
+              content: `Your **${schema.name}** wireframe is on the canvas. Generating code…`,
               timestamp: new Date(),
               wireframeId: schema.id,
               isLoading: false,
@@ -109,6 +109,7 @@ export class PromptPanelComponent implements OnInit, AfterViewChecked {
           }
           this.messageCount++;
           this.shouldScroll = true;
+          this.wireframeService.generateCode(schema);
         },
         error: () => {
           const idx = this.messages.findIndex(m => m.id === loadingId);
