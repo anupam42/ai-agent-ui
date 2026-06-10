@@ -19,7 +19,7 @@ const EXAMPLE_PROMPTS = [
   { icon: 'dynamic_form', text: 'Create a multi-step registration form', tag: 'Form' },
 ];
 
-const WELCOME_MESSAGE = `Hey there! I'm your **NLW Design Studio** assistant.\n\nDescribe any UI screen and I'll generate a live wireframe + Angular code for you.\n\nPick an example below or type your own.`;
+const WELCOME_MESSAGE = `Hey there! I'm your **NLW Design Studio** assistant.\n\nDescribe any UI screen and I'll generate a live wireframe + Angular code for you.\n\nYou can also **upload a screenshot or sketch** and I'll recreate it.\n\nPick an example below or type your own.`;
 
 @Component({
   selector: 'app-prompt-panel',
@@ -39,6 +39,7 @@ const WELCOME_MESSAGE = `Hey there! I'm your **NLW Design Studio** assistant.\n\
 export class PromptPanelComponent implements OnInit, AfterViewChecked {
   @ViewChild('chatContainer') chatContainer!: ElementRef;
   @ViewChild('inputField')    inputField!: ElementRef<HTMLTextAreaElement>;
+  @ViewChild('fileInput')     fileInput!: ElementRef<HTMLInputElement>;
 
   private readonly destroyRef       = inject(DestroyRef);
   private readonly wireframeService = inject(WireframeService);
@@ -52,6 +53,10 @@ export class PromptPanelComponent implements OnInit, AfterViewChecked {
   hoveredMsgId: string | null = null;
   copiedMsgId:  string | null = null;
   private shouldScroll = false;
+
+  // ── Image upload state ──
+  selectedImage:     string | null = null;   // base64 data URL
+  selectedImageName: string | null = null;
 
   ngOnInit(): void {
     this.wireframeService.loading$
@@ -67,17 +72,62 @@ export class PromptPanelComponent implements OnInit, AfterViewChecked {
     }
   }
 
+  // ── Image handling ──
+  triggerFileUpload(): void {
+    this.fileInput.nativeElement.click();
+  }
+
+  onFileSelected(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      this.snackBar.open('Please upload an image file (PNG, JPG, etc.)', '', { duration: 3000 });
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      this.snackBar.open('Image must be under 5MB', '', { duration: 3000 });
+      return;
+    }
+
+    this.selectedImageName = file.name;
+    const reader = new FileReader();
+    reader.onload = () => { this.selectedImage = reader.result as string; };
+    reader.readAsDataURL(file);
+
+    // Reset so the same file can be re-selected.
+    (event.target as HTMLInputElement).value = '';
+  }
+
+  removeImage(): void {
+    this.selectedImage = null;
+    this.selectedImageName = null;
+  }
+
   send(text?: string): void {
     const prompt = (text || this.input).trim();
-    if (!prompt || this.loading) return;
+    const image  = this.selectedImage;
+
+    if ((!prompt && !image) || this.loading) return;
+
+    // User message: show image thumb + caption.
+    const userContent = image
+      ? (prompt
+          ? `📎 ${this.selectedImageName}\n\n${prompt}`
+          : `📎 ${this.selectedImageName}\n\nRecreate this screenshot as a wireframe.`)
+      : prompt;
 
     this.messages.push({
       id: Date.now().toString(),
       role: 'user',
-      content: prompt,
+      content: userContent,
       timestamp: new Date(),
+      imageBase64: image || undefined,
     });
+
     this.input = '';
+    this.selectedImage = null;
+    this.selectedImageName = null;
     this.messageCount++;
     this.shouldScroll = true;
     this.resetTextarea();
@@ -91,8 +141,10 @@ export class PromptPanelComponent implements OnInit, AfterViewChecked {
       isLoading: true,
     });
 
+    const finalPrompt = prompt || (image ? 'Recreate this screenshot as a wireframe.' : '');
+
     this.wireframeService
-      .generateWireframe(prompt)
+      .generateWireframe(finalPrompt, image || undefined)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: schema => {
@@ -109,7 +161,6 @@ export class PromptPanelComponent implements OnInit, AfterViewChecked {
           }
           this.messageCount++;
           this.shouldScroll = true;
-          this.wireframeService.generateCode(schema);
         },
         error: () => {
           const idx = this.messages.findIndex(m => m.id === loadingId);
@@ -144,6 +195,8 @@ export class PromptPanelComponent implements OnInit, AfterViewChecked {
     this.messages = [];
     this.pushAssistant('0', WELCOME_MESSAGE);
     this.messageCount = 0;
+    this.selectedImage = null;
+    this.selectedImageName = null;
     this.shouldScroll = true;
   }
 

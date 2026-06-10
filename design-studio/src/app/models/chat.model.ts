@@ -7,4 +7,5 @@ export interface ChatMessage {
   timestamp: Date;
   wireframeId?: string;
   isLoading?: boolean;
+  imageBase64?: string;
 }

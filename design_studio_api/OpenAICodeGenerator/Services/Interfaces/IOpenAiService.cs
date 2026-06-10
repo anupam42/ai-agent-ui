@@ -2,5 +2,5 @@
 
 public interface IOpenAiService
 {
-    Task<string> GenerateUiAsync(string userPrompt);
+    Task<string> GenerateUiAsync(string userPrompt, string? imageBase64 = null);
 }

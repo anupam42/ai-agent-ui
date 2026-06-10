@@ -19,10 +19,13 @@ public class UiGenerationController(IOpenAiService openAiService) : ControllerBa
     public async Task<IActionResult> GenerateUi(
         [FromBody] UiRequestDto request)
     {
-        if (string.IsNullOrWhiteSpace(request.Prompt))
-            return BadRequest("Prompt is required");
+        // Need at least a prompt OR an image.
+        if (string.IsNullOrWhiteSpace(request.Prompt) && !request.HasImage)
+            return BadRequest("Either a Prompt or an ImageBase64 must be provided.");
 
-        var rawResponse = await openAiService.GenerateUiAsync(request.Prompt);
+        var rawResponse = await openAiService.GenerateUiAsync(
+            request.Prompt,
+            request.ImageBase64);
 
         try
         {

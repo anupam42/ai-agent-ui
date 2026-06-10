@@ -33,7 +33,6 @@
   <div class="chat-window" #chatContainer>
     @for (msg of messages; track msg.id) {
       <div
-        class="chat-message"
         [class]="'chat-message ' + (msg.role === 'user' ? 'msg-user' : 'msg-ai')"
         (mouseenter)="hoveredMsgId = msg.id"
         (mouseleave)="hoveredMsgId = null"
@@ -52,9 +51,15 @@
               <span class="thinking-text">Generating wireframe…</span>
             </div>
           } @else {
+            <!-- Image thumbnail (user messages with image) -->
+            @if (msg.imageBase64) {
+              <div class="msg-image">
+                <img [src]="msg.imageBase64" alt="Uploaded image" />
+              </div>
+            }
             <div class="msg-content" [innerHTML]="toHtml(msg.content)"></div>
             <div class="msg-footer">
-             <span class="msg-time">{{ formatTime(msg.timestamp) }}</span>
+              <span class="msg-time">{{ formatTime(msg.timestamp) }}</span>
               @if (msg.role === 'assistant' && !msg.isLoading && hoveredMsgId === msg.id) {
                 <button
                   class="msg-action-btn"
@@ -104,9 +109,51 @@
     </div>
   }
 
+  <!-- IMAGE PREVIEW BAR (above the input when an image is staged) -->
+  @if (selectedImage) {
+    <div class="image-preview-bar">
+      <img [src]="selectedImage" class="preview-thumb" alt="Preview" />
+      <div class="preview-info">
+        <span class="preview-name">{{ selectedImageName }}</span>
+        <span class="preview-hint">Ready to send</span>
+      </div>
+      <button
+        class="preview-remove"
+        (click)="removeImage()"
+        matTooltip="Remove image"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  }
+
   <!-- INPUT -->
   <div class="chat-input-area">
+    <!-- Hidden file input -->
+    <input
+      #fileInput
+      type="file"
+      accept="image/*"
+      (change)="onFileSelected($event)"
+      style="display: none"
+    />
+
     <div class="input-container">
+      <button
+        type="button"
+        class="upload-btn"
+        (click)="triggerFileUpload()"
+        [disabled]="loading"
+        matTooltip="Upload screenshot or sketch"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48">
+          <path fill="#F57C00" d="M40 41H8c-2.2 0-4-1.8-4-4V11c0-2.2 1.8-4 4-4h32c2.2 0 4 1.8 4 4v26c0 2.2-1.8 4-4 4"/>
+          <circle cx="35" cy="16" r="3" fill="#FFF9C4"/>
+          <path fill="#942A09" d="M20 16L9 32h22z"/>
+          <path fill="#BF360C" d="m31 22l-8 10h16z"/>
+        </svg>
+      </button>
+
       <textarea
         #inputField
         [(ngModel)]="input"
@@ -117,6 +164,7 @@
         [disabled]="loading"
         maxlength="2000"
       ></textarea>
+
       <div class="input-right">
         @if (input.length > 100) {
           <span class="char-counter" [class.warn]="input.length > 1800">
@@ -126,7 +174,7 @@
         <button
           mat-mini-fab
           class="send-btn"
-          [disabled]="!input.trim() || loading"
+          [disabled]="(!input.trim() && !selectedImage) || loading"
           (click)="send()"
           matTooltip="Send (Enter)"
         >

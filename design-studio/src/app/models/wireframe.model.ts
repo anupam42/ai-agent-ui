@@ -32,6 +32,11 @@ export interface WireframeSchema {
   root: WireframeNode;
   createdAt: Date;
   mappings?: ComponentMapping[];
+  imageBase64?: string;
+
+  // NEW — AI-generated output, rendered as a live iframe preview.
+  html?: string;
+  scss?: string;
 }
 
 export interface ComponentMapping {
