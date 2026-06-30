@@ -1,9 +1,11 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 using UiCodeGenerator.Api.Middleware;
 using UiCodeGenerator.Application.Abstractions;
 using UiCodeGenerator.Application.Services;
 using UiCodeGenerator.Infrastructure;
+using UiCodeGenerator.Infrastructure.Persistence;
 
 const string CorsPolicyName = "Frontend";
 
@@ -21,6 +23,7 @@ builder.Services.AddSwaggerGen(options =>
     }));
 
 builder.Services.AddScoped<IUiGenerationService, UiGenerationService>();
+builder.Services.AddScoped<IHistoryService, HistoryService>();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 var allowedOrigins = builder.Configuration
@@ -49,6 +52,13 @@ builder.Services.AddCors(options =>
     }));
 
 var app = builder.Build();
+
+// Ensure SQLite database and schema exist on startup
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<DesignStudioDbContext>();
+    db.Database.EnsureCreated();
+}
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 

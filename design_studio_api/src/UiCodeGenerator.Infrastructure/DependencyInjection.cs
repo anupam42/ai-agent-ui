@@ -1,11 +1,13 @@
 using System.Net.Http.Headers;
 
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 using UiCodeGenerator.Application.Abstractions;
 using UiCodeGenerator.Infrastructure.DeepSeek;
+using UiCodeGenerator.Infrastructure.Persistence;
 
 namespace UiCodeGenerator.Infrastructure;
 
@@ -15,6 +17,18 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        var dbPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+            "DesignStudio",
+            "design_studio.db");
+
+        Directory.CreateDirectory(Path.GetDirectoryName(dbPath)!);
+
+        services.AddDbContext<DesignStudioDbContext>(opts =>
+            opts.UseSqlite($"Data Source={dbPath}"));
+
+        services.AddScoped<IHistoryRepository, HistoryRepository>();
+
         services
             .AddOptions<DeepSeekOptions>()
             .Bind(configuration.GetSection(DeepSeekOptions.SectionName))
