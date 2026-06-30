@@ -85,6 +85,18 @@ html, body {
   letter-spacing: 0 !important;
 }
 
+// ── History drawer — backdrop blur ────────────────────────────────────────────
+.mat-drawer-backdrop.mat-drawer-shown {
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+  background-color: rgba(0, 0, 0, 0.18) !important;
+}
+
+// Drawer slide-in animation
+.mat-drawer.mat-drawer-end {
+  transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
 // ── Error snackbar shown when code-gen backend is unreachable ─────────────────
 .canvas-error-snack {
   .mdc-snackbar__surface {

@@ -1,0 +1,97 @@
+<div class="hd-shell">
+
+  <!-- ── Header ─────────────────────────────────────────────── -->
+  <div class="hd-header">
+    <div class="hd-title-row">
+      <div class="hd-title">
+        <mat-icon class="hd-title-icon">history</mat-icon>
+        <span>History</span>
+      </div>
+      @if (totalCount) { <span class="hd-count">{{ totalCount }}</span> }
+      <div class="hd-header-actions">
+        @if (totalCount > 0) {
+          <button class="hd-action-btn" [class.hd-confirm]="confirmClear"
+            [matTooltip]="confirmClear ? 'Click again to confirm' : 'Clear all history'"
+            (click)="clearAll()">
+            <mat-icon>{{ confirmClear ? 'warning' : 'delete_sweep' }}</mat-icon>
+          </button>
+        }
+        <button class="hd-action-btn hd-close-btn" matTooltip="Close" (click)="closeDrawer.emit()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="hd-search">
+      <mat-icon class="hd-search-icon">search</mat-icon>
+      <input
+        class="hd-search-input"
+        type="text"
+        placeholder="Search designs…"
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearch()"
+        autocomplete="off" />
+      @if (searchQuery) {
+        <button class="hd-search-clear" (click)="clearSearch()">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- ── Session list ────────────────────────────────────────── -->
+  <div class="hd-body">
+
+    @if (isEmpty) {
+      <!-- Empty state -->
+      <div class="hd-empty">
+        <div class="hd-empty-icon-box">
+          <mat-icon>history_toggle_off</mat-icon>
+        </div>
+        @if (searchQuery) {
+          <p class="hd-empty-title">No results for "{{ searchQuery }}"</p>
+          <p class="hd-empty-hint">Try a different search term.</p>
+        } @else {
+          <p class="hd-empty-title">No history yet</p>
+          <p class="hd-empty-hint">Designs you generate will appear here so you can revisit them any time.</p>
+        }
+      </div>
+    } @else {
+
+      @for (group of groups; track group.label) {
+        <div class="hd-group">
+          <span class="hd-group-label">{{ group.label }}</span>
+
+          @for (session of group.sessions; track session.id) {
+            <div class="hd-session-card" matRipple (click)="restore(session)">
+
+              <!-- Icon thumbnail -->
+              <div class="hd-session-thumb"
+                [style.background]="colorFor(session.schemaName) + '18'"
+                [style.color]="colorFor(session.schemaName)">
+                <mat-icon>{{ iconFor(session.schemaName) }}</mat-icon>
+              </div>
+
+              <!-- Content -->
+              <div class="hd-session-content">
+                <span class="hd-session-name">{{ session.schemaName }}</span>
+                <span class="hd-session-prompt">{{ session.prompt }}</span>
+                <span class="hd-session-time">{{ timeAgo(session.createdAt) }}</span>
+              </div>
+
+              <!-- Delete -->
+              <button class="hd-session-delete"
+                matTooltip="Remove"
+                (click)="deleteSession($event, session.id)">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+
+            </div>
+          }
+        </div>
+      }
+    }
+
+  </div>
+</div>

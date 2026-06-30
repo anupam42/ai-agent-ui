@@ -4,6 +4,27 @@
   overflow: hidden;
 }
 
+// ─── Material sidenav wrapper ────────────────────────────────────────────────
+.nlw-sidenav-container {
+  height: 100vh;
+  width: 100%;
+  background: transparent;
+}
+
+.nlw-sidenav-content {
+  height: 100vh;
+  overflow: hidden;
+}
+
+// ─── History drawer panel ────────────────────────────────────────────────────
+::ng-deep .history-sidenav {
+  width: 360px;
+  border-left: 1px solid var(--border) !important;
+  box-shadow: -8px 0 40px rgba(0, 0, 0, 0.14) !important;
+  background: var(--panel-bg) !important;
+  border-radius: 0 !important;
+}
+
 .nlw-app {
   display: grid;
   grid-template-rows: 44px 1fr;

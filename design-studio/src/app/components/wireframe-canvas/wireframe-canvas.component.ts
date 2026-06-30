@@ -20,7 +20,7 @@ import { WireframeSchema, GeneratedCode } from '../../models/wireframe.model';
 import { WireframeBlockComponent } from '../wireframe-block/wireframe-block.component';
 
 export type Viewport = 'mobile' | 'tablet' | 'desktop';
-type Tool = 'arrow' | 'hand';
+type Tool = 'arrow' | 'hand' | 'marquee' | 'frame';
 
 interface ViewportOption {
   value: Viewport;
@@ -58,16 +58,22 @@ export class WireframeCanvasComponent implements OnInit, AfterViewInit, AfterVie
   history: WireframeSchema[] = [];
   code: GeneratedCode = { html: '', ts: '', scss: '' };
 
+  readonly Math = Math;
+
   tool: Tool = 'arrow';
   offsetX = 0;
   offsetY = 0;
   zoom = 1;
   isDragging = false;
   showViewportDropdown = false;
+  emptyFrame = false;
 
   resizeW: number | null = null;
   resizeH: number | null = null;
   isMouseOverCanvas = false;
+
+  marqueeRect: { x: number; y: number; w: number; h: number } | null = null;
+  drawingFrame: { x: number; y: number; w: number; h: number } | null = null;
 
   private dragStartX = 0;
   private dragStartY = 0;
@@ -78,6 +84,10 @@ export class WireframeCanvasComponent implements OnInit, AfterViewInit, AfterVie
   private resizeStartY = 0;
   private resizeStartW = 0;
   private resizeStartH = 0;
+  private marqueeStartX = 0;
+  private marqueeStartY = 0;
+  private frameDrawStartX = 0;
+  private frameDrawStartY = 0;
 
   private readonly onWheelHandler = (e: WheelEvent): void => {
     if (!e.ctrlKey) return;
@@ -123,6 +133,7 @@ export class WireframeCanvasComponent implements OnInit, AfterViewInit, AfterVie
   ngOnInit(): void {
     this.wireframeService.schema$.subscribe((s) => {
       this.schema = s;
+      if (s) this.emptyFrame = false;
       this.resizeW = null;
       this.resizeH = null;
       setTimeout(() => this.fitToCanvas());
@@ -217,6 +228,8 @@ export class WireframeCanvasComponent implements OnInit, AfterViewInit, AfterVie
 
   selectTool(t: Tool): void {
     this.tool = t;
+    this.marqueeRect = null;
+    this.drawingFrame = null;
   }
 
   zoomIn(): void {
@@ -250,16 +263,36 @@ export class WireframeCanvasComponent implements OnInit, AfterViewInit, AfterVie
     this.isMouseOverCanvas = false;
     this.isDragging = false;
     this.activeHandle = null;
+    this.marqueeRect = null;
+    this.drawingFrame = null;
   }
 
   onCanvasMouseDown(e: MouseEvent): void {
-    if (this.tool !== 'hand') return;
-    this.isDragging = true;
-    this.dragStartX = e.clientX;
-    this.dragStartY = e.clientY;
-    this.offsetStartX = this.offsetX;
-    this.offsetStartY = this.offsetY;
-    e.preventDefault();
+    if (this.tool === 'hand') {
+      this.isDragging = true;
+      this.dragStartX = e.clientX;
+      this.dragStartY = e.clientY;
+      this.offsetStartX = this.offsetX;
+      this.offsetStartY = this.offsetY;
+      e.preventDefault();
+      return;
+    }
+    if (this.tool === 'marquee') {
+      const rect = this.canvasBodyRef!.nativeElement.getBoundingClientRect();
+      this.marqueeStartX = e.clientX - rect.left;
+      this.marqueeStartY = e.clientY - rect.top;
+      this.marqueeRect = { x: this.marqueeStartX, y: this.marqueeStartY, w: 0, h: 0 };
+      e.preventDefault();
+      return;
+    }
+    if (this.tool === 'frame') {
+      const rect = this.canvasBodyRef!.nativeElement.getBoundingClientRect();
+      this.frameDrawStartX = e.clientX - rect.left;
+      this.frameDrawStartY = e.clientY - rect.top;
+      this.drawingFrame = { x: this.frameDrawStartX, y: this.frameDrawStartY, w: 0, h: 0 };
+      e.preventDefault();
+      return;
+    }
   }
 
   onCanvasMouseMove(e: MouseEvent): void {
@@ -272,14 +305,53 @@ export class WireframeCanvasComponent implements OnInit, AfterViewInit, AfterVie
       if (this.activeHandle.includes('t')) this.resizeH = Math.max(200, this.resizeStartH - dy);
       return;
     }
-    if (!this.isDragging) return;
-    this.offsetX = this.offsetStartX + (e.clientX - this.dragStartX);
-    this.offsetY = this.offsetStartY + (e.clientY - this.dragStartY);
+    if (this.isDragging) {
+      this.offsetX = this.offsetStartX + (e.clientX - this.dragStartX);
+      this.offsetY = this.offsetStartY + (e.clientY - this.dragStartY);
+      return;
+    }
+    if (this.marqueeRect) {
+      const rect = this.canvasBodyRef!.nativeElement.getBoundingClientRect();
+      const curX = e.clientX - rect.left;
+      const curY = e.clientY - rect.top;
+      this.marqueeRect = {
+        x: Math.min(curX, this.marqueeStartX),
+        y: Math.min(curY, this.marqueeStartY),
+        w: Math.abs(curX - this.marqueeStartX),
+        h: Math.abs(curY - this.marqueeStartY),
+      };
+      return;
+    }
+    if (this.drawingFrame) {
+      const rect = this.canvasBodyRef!.nativeElement.getBoundingClientRect();
+      const curX = e.clientX - rect.left;
+      const curY = e.clientY - rect.top;
+      this.drawingFrame = {
+        x: Math.min(curX, this.frameDrawStartX),
+        y: Math.min(curY, this.frameDrawStartY),
+        w: Math.abs(curX - this.frameDrawStartX),
+        h: Math.abs(curY - this.frameDrawStartY),
+      };
+      return;
+    }
   }
 
   onCanvasMouseUp(): void {
     this.isDragging = false;
     this.activeHandle = null;
+    if (this.tool === 'marquee') {
+      this.marqueeRect = null;
+    }
+    if (this.tool === 'frame' && this.drawingFrame) {
+      if (this.drawingFrame.w > 20 && this.drawingFrame.h > 20) {
+        this.resizeW = Math.max(200, Math.round(this.drawingFrame.w / this.zoom));
+        this.resizeH = Math.max(100, Math.round(this.drawingFrame.h / this.zoom));
+        this.emptyFrame = true;
+        setTimeout(() => this.fitToCanvas());
+      }
+      this.drawingFrame = null;
+      this.tool = 'arrow';
+    }
   }
 
   @HostListener('document:click')
@@ -293,7 +365,14 @@ export class WireframeCanvasComponent implements OnInit, AfterViewInit, AfterVie
     if (tag === 'TEXTAREA' || tag === 'INPUT') return;
     if (e.key === 'h' || e.key === 'H') this.tool = 'hand';
     if (e.key === 'v' || e.key === 'V') this.tool = 'arrow';
-    if (e.key === 'Escape') { this.tool = 'arrow'; this.showViewportDropdown = false; }
+    if (e.key === 'm' || e.key === 'M') this.tool = 'marquee';
+    if (e.key === 'f' || e.key === 'F') this.tool = 'frame';
+    if (e.key === 'Escape') {
+      this.tool = 'arrow';
+      this.showViewportDropdown = false;
+      this.marqueeRect = null;
+      this.drawingFrame = null;
+    }
     if (this.isMouseOverCanvas && e.ctrlKey && e.key === '=') { this.zoomIn(); e.preventDefault(); }
     if (this.isMouseOverCanvas && e.ctrlKey && e.key === '-') { this.zoomOut(); e.preventDefault(); }
     if (this.isMouseOverCanvas && e.ctrlKey && e.key === '0') { this.resetZoom(); e.preventDefault(); }

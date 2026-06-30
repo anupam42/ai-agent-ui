@@ -357,8 +357,44 @@ $text-dim:    var(--text-3);
   background-size: 20px 20px;
 
   cursor: default;
-  &.tool-hand   { cursor: grab; }
-  &.is-dragging { cursor: grabbing; }
+  &.tool-hand      { cursor: grab; }
+  &.tool-crosshair { cursor: crosshair; }
+  &.is-dragging    { cursor: grabbing; }
+}
+
+// ── Marquee selection overlay ─────────────────────────────────
+.marquee-overlay {
+  position: absolute;
+  pointer-events: none;
+  border: 1.5px dashed $accent;
+  background: rgba(99, 102, 241, 0.07);
+  border-radius: 2px;
+  z-index: 30;
+}
+
+// ── Frame drawing overlay ─────────────────────────────────────
+.frame-drawing-overlay {
+  position: absolute;
+  pointer-events: none;
+  border: 2px solid $accent;
+  background: rgba(99, 102, 241, 0.05);
+  border-radius: 2px;
+  z-index: 30;
+
+  .frame-dim-label {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 0;
+    font-size: 10px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    color: #fff;
+    background: $accent;
+    padding: 2px 7px;
+    border-radius: 4px;
+    white-space: nowrap;
+    pointer-events: none;
+  }
 }
 
 // ── Frame wrapper ─────────────────────────────────────────────

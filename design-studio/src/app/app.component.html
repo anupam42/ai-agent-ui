@@ -1,68 +1,72 @@
-<div class="nlw-app">
+<mat-sidenav-container class="nlw-sidenav-container" [hasBackdrop]="true">
 
-  <!-- ─── App header ─── -->
-  <header class="app-header">
-    <div class="ah-left">
-      <div class="ah-logo">
-        <img src="assets/Mavim_icons_32x32 AI.svg" width="32" height="32" alt="Mavim icon">
-        <div class="ah-logo-text">
-          <span class="ah-logo-name">Mavim</span>
-          <span class="ah-logo-sub">DESIGN STUDIO</span>
+  <!-- ─── History drawer (slides in from right) ─── -->
+  <mat-sidenav #historyDrawer position="end" mode="over" class="history-sidenav">
+    <app-history-drawer (closeDrawer)="historyDrawer.close()" />
+  </mat-sidenav>
+
+  <mat-sidenav-content class="nlw-sidenav-content">
+    <div class="nlw-app">
+
+      <!-- ─── App header ─── -->
+      <header class="app-header">
+        <div class="ah-left">
+          <div class="ah-logo">
+            <img src="assets/Mavim_icons_32x32 AI.svg" width="32" height="32" alt="Mavim icon">
+            <div class="ah-logo-text">
+              <span class="ah-logo-name">Mavim</span>
+              <span class="ah-logo-sub">DESIGN STUDIO</span>
+            </div>
+          </div>
         </div>
-      </div>
-      <!-- <nav class="ah-breadcrumb">
-        <span>Natural Language</span>
-        <mat-icon class="ah-sep">chevron_right</mat-icon>
-        <span>Wireframe</span>
-        <mat-icon class="ah-sep">chevron_right</mat-icon>
-        <span class="ah-active">Code</span>
-      </nav> -->
-    </div>
-    <div class="ah-right">
-      <button class="ah-icon-btn" matTooltip="History">
-        <mat-icon>history</mat-icon>
-      </button>
-      <span class="ah-version">v{{ version }}</span>
-    </div>
-  </header>
-
-  <div class="nlw-panels" [class.canvas-maximized]="isMaximized">
-
-    <!-- Prompt panel -->
-    <div class="panel panel-prompt" [class.panel-collapsed]="isMaximized">
-      <div class="collapsed-overlay" matRipple (click)="toggleMaximize()">
-        <div class="collapsed-card-inner">
-          <mat-icon class="collapsed-icon">chat</mat-icon>
-          <span class="collapsed-label">Prompt</span>
+        <div class="ah-right">
+          <button class="ah-icon-btn" matTooltip="History" (click)="openHistory()">
+            <mat-icon>history</mat-icon>
+          </button>
+          <span class="ah-version">v{{ version }}</span>
         </div>
-      </div>
-      <div class="panel-content">
-        <app-prompt-panel />
-      </div>
-    </div>
+      </header>
 
-    <!-- Canvas (center) -->
-    <div class="panel panel-canvas">
-      <app-wireframe-canvas
-        [isMaximized]="isMaximized"
-        [isDark]="isDark"
-        (toggleMaximize)="toggleMaximize()"
-        (toggleTheme)="toggleTheme()" />
-    </div>
+      <div class="nlw-panels" [class.canvas-maximized]="isMaximized">
 
-    <!-- Code panel -->
-    <div class="panel panel-code" [class.panel-collapsed]="isMaximized">
-      <div class="collapsed-overlay" matRipple (click)="toggleMaximize()">
-        <div class="collapsed-card-inner">
-          <mat-icon class="collapsed-icon">code</mat-icon>
-          <span class="collapsed-label">Code</span>
+        <!-- Prompt panel -->
+        <div class="panel panel-prompt" [class.panel-collapsed]="isMaximized">
+          <div class="collapsed-overlay" matRipple (click)="toggleMaximize()">
+            <div class="collapsed-card-inner">
+              <mat-icon class="collapsed-icon">chat</mat-icon>
+              <span class="collapsed-label">Prompt</span>
+            </div>
+          </div>
+          <div class="panel-content">
+            <app-prompt-panel />
+          </div>
         </div>
-      </div>
-      <div class="panel-content">
-        <app-code-preview [isDark]="isDark" />
-        <app-mapping-panel />
+
+        <!-- Canvas (center) -->
+        <div class="panel panel-canvas">
+          <app-wireframe-canvas
+            [isMaximized]="isMaximized"
+            [isDark]="isDark"
+            (toggleMaximize)="toggleMaximize()"
+            (toggleTheme)="toggleTheme()" />
+        </div>
+
+        <!-- Code panel -->
+        <div class="panel panel-code" [class.panel-collapsed]="isMaximized">
+          <div class="collapsed-overlay" matRipple (click)="toggleMaximize()">
+            <div class="collapsed-card-inner">
+              <mat-icon class="collapsed-icon">code</mat-icon>
+              <span class="collapsed-label">Code</span>
+            </div>
+          </div>
+          <div class="panel-content">
+            <app-code-preview [isDark]="isDark" />
+            <app-mapping-panel />
+          </div>
+        </div>
+
       </div>
     </div>
+  </mat-sidenav-content>
 
-  </div>
-</div>
+</mat-sidenav-container>

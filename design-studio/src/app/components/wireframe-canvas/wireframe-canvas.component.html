@@ -16,13 +16,15 @@
       <mat-icon>near_me</mat-icon>
     </button>
 
-    <button class="ct-btn"
-      matTooltip="Marquee select" matTooltipPosition="right">
+    <button class="ct-btn" [class.active]="tool === 'marquee'"
+      (click)="selectTool('marquee')"
+      matTooltip="Marquee select  M" matTooltipPosition="right">
       <mat-icon>highlight_alt</mat-icon>
     </button>
 
-    <button class="ct-btn"
-      matTooltip="Frame" matTooltipPosition="right">
+    <button class="ct-btn" [class.active]="tool === 'frame'"
+      (click)="selectTool('frame')"
+      matTooltip="Frame  F" matTooltipPosition="right">
       <mat-icon>crop_free</mat-icon>
     </button>
 
@@ -54,7 +56,8 @@
   <!-- ─── Canvas area ─── -->
   <div class="canvas-area">
 
-    <!-- Floating topbar — always visible -->
+    <!-- Floating topbar — visible only when canvas has content -->
+    @if (loading || schema) {
     <div class="floating-topbar">
 
       <!-- Left: viewport selector + filename -->
@@ -107,6 +110,7 @@
       </div>
 
     </div>
+    }
 
     <!-- Top-right canvas actions: theme toggle + Share -->
     <div class="canvas-actions">
@@ -124,6 +128,7 @@
     <!-- ─── Canvas body ─── -->
     <div #canvasBody class="canvas-body"
       [class.tool-hand]="tool === 'hand'"
+      [class.tool-crosshair]="tool === 'marquee' || tool === 'frame'"
       [class.is-dragging]="isDragging"
       (mousedown)="onCanvasMouseDown($event)"
       (mousemove)="onCanvasMouseMove($event)"
@@ -131,7 +136,7 @@
       (mouseleave)="onCanvasMouseLeave()"
       (mouseenter)="onCanvasMouseEnter()">
 
-      @if (!loading && !schema) {
+      @if (!loading && !schema && !emptyFrame) {
         <!-- Empty state — no frame yet -->
         <div class="canvas-placeholder empty">
           <div class="empty-icon-box">
@@ -174,13 +179,38 @@
               </div>
             } @else if (code.html) {
               <iframe #previewFrame class="real-preview" frameborder="0"></iframe>
-            } @else {
-              <app-wireframe-block [node]="schema!.root" [depth]="0" />
+            } @else if (schema) {
+              <app-wireframe-block [node]="schema.root" [depth]="0" />
             }
           </div>
 
           <!-- Dimension pill -->
           <div class="dim-pill">{{ frameDimensionLabel }}</div>
+        </div>
+      }
+
+      <!-- Marquee selection overlay -->
+      @if (marqueeRect) {
+        <div class="marquee-overlay"
+          [style.left.px]="marqueeRect.x"
+          [style.top.px]="marqueeRect.y"
+          [style.width.px]="marqueeRect.w"
+          [style.height.px]="marqueeRect.h">
+        </div>
+      }
+
+      <!-- Frame drawing overlay -->
+      @if (drawingFrame) {
+        <div class="frame-drawing-overlay"
+          [style.left.px]="drawingFrame.x"
+          [style.top.px]="drawingFrame.y"
+          [style.width.px]="drawingFrame.w"
+          [style.height.px]="drawingFrame.h">
+          @if (drawingFrame.w > 40 && drawingFrame.h > 20) {
+            <span class="frame-dim-label">
+              {{ Math.round(drawingFrame.w / zoom) }} × {{ Math.round(drawingFrame.h / zoom) }}
+            </span>
+          }
         </div>
       }
 
