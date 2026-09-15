@@ -5,7 +5,9 @@ using OpenAICodeGenerator.Services.Interfaces;
 
 namespace OpenAICodeGenerator.Services;
 
-public class OpenAiService(IHttpClientFactory httpFactory, IConfiguration config) : IOpenAiService
+public class OpenAiService(
+    IHttpClientFactory httpFactory,
+    IConfiguration config) : IOpenAiService
 {
     public async Task<string> GenerateUiAsync(string userPrompt)
     {
@@ -15,7 +17,7 @@ public class OpenAiService(IHttpClientFactory httpFactory, IConfiguration config
 
         var http = httpFactory.CreateClient();
 
-        http.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
+        http.DefaultRequestHeaders.Add("api-key", apiKey);
 
         var systemPrompt = @"
 You are an expert Angular 19 UI generator.
@@ -73,26 +75,15 @@ VALIDATION:
         var requestBody = new
         {
             model = modelName,
-            messages = new object[]
+            instructions = systemPrompt,
+            input = new object[]
             {
-                new
-                {
-                    role = "system",
-                    content = systemPrompt
-                },
                 new
                 {
                     role = "user",
                     content = userPrompt
                 }
-            },
-
-            // Optional for Agentic AI
-            tools = Array.Empty<object>(),
-            tool_choice = "auto",
-
-            temperature = 0.3,
-            max_tokens = 2000
+            }
         };
 
         var content = new StringContent(
@@ -105,16 +96,33 @@ VALIDATION:
         var responseJson = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
-            throw new Exception($"Azure OpenAI error: {responseJson}");
+        {
+            throw new Exception(
+                $"Azure OpenAI Error ({response.StatusCode}): {responseJson}");
+        }
 
         using var doc = JsonDocument.Parse(responseJson);
 
-        var result = doc.RootElement
-            .GetProperty("choices")[0]
-            .GetProperty("message")
-            .GetProperty("content")
-            .GetString();
+        if (!doc.RootElement.TryGetProperty("output", out var output))
+        {
+            throw new Exception(
+                $"Unexpected response format: {responseJson}");
+        }
 
-        return result ?? "{}";
+        foreach (var item in output.EnumerateArray())
+        {
+            if (!item.TryGetProperty("content", out var contentArray))
+                continue;
+
+            foreach (var contentItem in contentArray.EnumerateArray())
+            {
+                if (contentItem.TryGetProperty("text", out var textElement))
+                {
+                    return textElement.GetString() ?? "{}";
+                }
+            }
+        }
+
+        return "{}";
     }
 }
